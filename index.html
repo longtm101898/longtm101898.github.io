@@ -31,7 +31,7 @@
         --line: #d3dae8;
         --panel-mute: #b9c4e0;
         --gutter: clamp(1.25rem, 5vw, 5rem);
-        --bar: 3.5rem;
+        --bar: 3.75rem;
         --font:
           'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', system-ui,
           sans-serif;
@@ -61,6 +61,7 @@
         color: inherit;
       }
 
+      /* Yellow ring inside, ink ring outside: visible on light and dark backgrounds */
       :focus-visible {
         outline: 3px solid var(--signal);
         outline-offset: 0;
@@ -106,19 +107,21 @@
         background: var(--ink);
       }
       .topbar nav {
-        padding: clamp(1.25rem, 2.5vw, 2rem) var(--gutter) 0;
+        padding: clamp(0.9rem, 2vw, 1.5rem) var(--gutter) 0;
       }
 
       .topbar ul {
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-end;
-        gap: 0.5rem 1.5rem;
+        gap: 0.25rem 1.5rem;
         margin: 0;
         padding: 0;
         list-style: none;
       }
       .topbar a {
+        display: inline-block;
+        padding: 0.35rem 0; /* target taller than 24px */
         font-size: 0.9375rem;
         font-weight: 600;
         text-decoration: none;
@@ -157,7 +160,8 @@
         margin-bottom: 1.25rem;
       }
 
-      /* Swap this block for <img class="portrait" src="long-tran.jpg" alt="" width="72" height="72"> */
+      /* Swap this block for
+     <img class="portrait" src="long-tran.jpg" alt="Portrait of Long Tran" width="72" height="72"> */
       .portrait {
         flex: none;
         display: grid;
@@ -184,14 +188,11 @@
         color: var(--mute);
       }
 
+      /* max is 2.5x min so the name can still reach 200% when zoomed */
       h1 {
         margin: 0;
-        font-size: clamp(3.5rem, 10vw, 9rem); /* fallback */
-        font-size: clamp(
-          3.5rem,
-          19cqi,
-          9rem
-        ); /* scales with the column, not the viewport */
+        font-size: clamp(3.5rem, 10vw, 8.75rem); /* fallback */
+        font-size: clamp(3.5rem, 19cqi, 8.75rem); /* scales with the column */
         font-weight: 800;
         line-height: 0.9;
         letter-spacing: -0.045em;
@@ -416,35 +417,48 @@
         column-gap: clamp(1.5rem, 4vw, 4rem);
       }
 
+      /* DOM order is title, meta, body, stack, so heading navigation reaches
+     everything about a project. The grid places the meta on the left. */
       .case {
-        row-gap: 1rem;
         padding: clamp(1.75rem, 3vw, 2.5rem) 0;
         border-top: 2px solid var(--ink);
       }
 
-      .case-meta {
-        margin: 0;
-        font-size: 0.9375rem;
-        color: var(--mute);
-      }
-      .case-meta strong {
-        display: block;
-        font-weight: 800;
-        color: var(--ink);
-      }
-      .case-meta a {
-        display: inline-block;
-        margin-top: 0.4rem;
-        color: var(--cobalt);
-        font-weight: 600;
-      }
-
       .case h3 {
+        grid-column: 2;
+        grid-row: 1;
         margin: 0;
         font-size: clamp(1.75rem, 3vw, 2.5rem);
         font-weight: 800;
         line-height: 1.05;
         letter-spacing: -0.025em;
+      }
+
+      .case-meta {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        margin: 0;
+        font-size: 0.9375rem;
+        color: var(--mute);
+      }
+      .case-meta span {
+        display: block;
+      }
+      .case-meta .when {
+        font-weight: 800;
+        color: var(--ink);
+      }
+      .case-meta a {
+        display: inline-block;
+        margin-top: 0.3rem;
+        padding: 0.15rem 0; /* target taller than 24px */
+        color: var(--cobalt);
+        font-weight: 600;
+      }
+
+      .case-body {
+        grid-column: 2;
+        grid-row: 2;
       }
       .case-desc {
         margin: 0.5rem 0 0;
@@ -468,7 +482,10 @@
       .case li::marker {
         color: var(--cobalt);
       }
+
       .case-stack {
+        grid-column: 3;
+        grid-row: 1 / span 2;
         margin: 0.35rem 0 0;
         font-size: 0.9375rem;
         color: var(--mute);
@@ -530,7 +547,11 @@
         .more li {
           grid-template-columns: 11rem minmax(0, 1fr);
         }
-        .case-stack,
+        .case-stack {
+          grid-column: 2;
+          grid-row: 3;
+          margin-top: 1rem;
+        }
         .more li > :last-child {
           grid-column: 2;
         }
@@ -554,7 +575,19 @@
         .more li {
           grid-template-columns: minmax(0, 1fr);
         }
-        .case-stack,
+        .case h3,
+        .case-meta,
+        .case-body,
+        .case-stack {
+          grid-column: 1;
+          grid-row: auto;
+        }
+        .case-meta {
+          margin-top: 0.6rem;
+        }
+        .case-body {
+          margin-top: 0.5rem;
+        }
         .more li > :last-child {
           grid-column: auto;
         }
@@ -630,7 +663,7 @@
             <a href="https://www.linkedin.com/in/longtran98/">LinkedIn</a>
           </li>
           <li><a href="https://github.com/longtm101898">GitHub</a></li>
-          <li><a href="Long-Tran-CV.pdf" download>Download CV</a></li>
+          <li><a href="Long-Tran-CV.pdf" download>Download CV (PDF)</a></li>
         </ul>
       </nav>
     </header>
@@ -771,13 +804,14 @@
         </div>
 
         <article class="case">
+          <h3>IWorkForNSW</h3>
           <p class="case-meta">
-            <strong>Sep 2025 to present</strong>
-            AdNeo<br />Full-stack engineer<br />
+            <span class="when">Sep 2025 to present</span>
+            <span>AdNeo</span>
+            <span>Full-stack engineer</span>
             <a href="https://iworkfor.nsw.gov.au/">iworkfor.nsw.gov.au</a>
           </p>
-          <div>
-            <h3>IWorkForNSW</h3>
+          <div class="case-body">
             <p class="case-desc">
               The official recruitment platform of the New South Wales
               Government.
@@ -814,17 +848,20 @@
         </article>
 
         <article class="case">
-          <!-- Curieous -->
+          <h3>Curieous</h3>
           <p class="case-meta">
-            <strong>Feb 2023 to Oct 2025</strong>
-            Curieous<br />Frontend and mobile developer<br />
+            <span class="when">Feb 2023 to Oct 2025</span>
+            <span>Curieous</span>
+            <span>Frontend and mobile developer</span>
             <a
               href="https://apps.apple.com/us/app/curieous-tell-founder-stories/id6445838553"
-              >App Store</a
+              >Curieous on the App Store</a
             >
+            <!-- Có link Play Store thì bỏ comment dòng dưới và dán vào:
+        <a href="PLAY_STORE_URL">Curieous on Google Play</a>
+        -->
           </p>
-          <div>
-            <h3>Curieous</h3>
+          <div class="case-body">
             <p class="case-desc">
               A voice-to-content platform that turns voice into LinkedIn posts,
               on web and mobile.
@@ -848,13 +885,14 @@
         </article>
 
         <article class="case">
+          <h3>Lawcation</h3>
           <p class="case-meta">
-            <strong>2021 to 2024</strong>
-            Bocasay Vietnam<br />Frontend and mobile developer<br />
+            <span class="when">2021 to 2024</span>
+            <span>Bocasay Vietnam</span>
+            <span>Frontend and mobile developer</span>
             <a href="https://lawcation.fr">lawcation.fr</a>
           </p>
-          <div>
-            <h3>Lawcation</h3>
+          <div class="case-body">
             <p class="case-desc">
               A mobile app that connects lawyers who need support from one
               another on their cases.
@@ -873,13 +911,14 @@
         </article>
 
         <article class="case">
+          <h3>SICOM App</h3>
           <p class="case-meta">
-            <strong>2021 to 2024</strong>
-            Bocasay Vietnam<br />Frontend and mobile developer<br />
+            <span class="when">2021 to 2024</span>
+            <span>Bocasay Vietnam</span>
+            <span>Frontend and mobile developer</span>
             <a href="https://sicom.mu">sicom.mu</a>
           </p>
-          <div>
-            <h3>SICOM App</h3>
+          <div class="case-body">
             <p class="case-desc">
               A consulting engagement to fix and optimise the client's
               applications.
@@ -905,13 +944,14 @@
         </article>
 
         <article class="case">
+          <h3>OnceIT</h3>
           <p class="case-meta">
-            <strong>2021 to 2024</strong>
-            Bocasay Vietnam<br />Frontend and mobile developer<br />
+            <span class="when">2021 to 2024</span>
+            <span>Bocasay Vietnam</span>
+            <span>Frontend and mobile developer</span>
             <a href="https://onceit.co.nz">onceit.co.nz</a>
           </p>
-          <div>
-            <h3>OnceIT</h3>
+          <div class="case-body">
             <p class="case-desc">
               An online clothing platform where vendors can sell or rent out
               their products.
@@ -942,7 +982,7 @@
             <li>
               <div><strong>WAAA</strong><span>Creatory</span></div>
               <div>Built an NFT web application from scratch.</div>
-              <span>Next.js, Web3.js</span>
+              <span><span class="sr-only">Stack: </span>Next.js, Web3.js</span>
             </li>
             <li>
               <div><strong>Hyppo</strong><span>Creatory</span></div>
@@ -957,7 +997,7 @@
                 Developed reusable low-code components and enhanced platform
                 functionality.
               </div>
-              <span>React, Node.js</span>
+              <span><span class="sr-only">Stack: </span>React, Node.js</span>
             </li>
             <li>
               <div>
@@ -967,7 +1007,10 @@
                 Refactored the company website, improved performance and SEO,
                 and built mobile apps from scratch.
               </div>
-              <span>Next.js, React, React Native</span>
+              <span
+                ><span class="sr-only">Stack: </span>Next.js, React, React
+                Native</span
+              >
             </li>
             <li>
               <div><strong>GlobeOne</strong><span>Sutrix Solutions</span></div>
@@ -975,7 +1018,9 @@
                 Delivered frontend features and UI integrations across mobile
                 and web.
               </div>
-              <span>NativeScript, Vue.js</span>
+              <span
+                ><span class="sr-only">Stack: </span>NativeScript, Vue.js</span
+              >
             </li>
           </ul>
         </div>
@@ -987,7 +1032,7 @@
               >Email me</a
             >
             <a class="btn btn-quiet" href="Long-Tran-CV.pdf" download
-              >Download CV</a
+              >Download CV (PDF)</a
             >
           </div>
         </div>
