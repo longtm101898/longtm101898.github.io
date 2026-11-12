@@ -1,0 +1,997 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Long Tran, full-stack engineer</title>
+    <meta
+      name="description"
+      content="Long Tran, full-stack engineer with 6+ years in React, Next.js, React Native and C#/.NET. Currently building IWorkForNSW, the NSW Government recruitment platform."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Long Tran, full-stack engineer" />
+    <meta
+      property="og:description"
+      content="React, React Native and .NET, plus the security and accessibility fixes. WCAG 2.1 AA achieved on the NSW Government recruitment platform."
+    />
+    <meta name="theme-color" content="#0C1A3F" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --paper: #f2f5fa;
+        --ink: #0c1a3f;
+        --cobalt: #2743d3;
+        --signal: #ffcb2e;
+        --mute: #4f5b7a;
+        --line: #d3dae8;
+        --panel-mute: #b9c4e0;
+        --gutter: clamp(1.25rem, 5vw, 5rem);
+        --bar: 3.5rem;
+        --font:
+          'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', system-ui,
+          sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      @media (prefers-reduced-motion: no-preference) {
+        html {
+          scroll-behavior: smooth;
+        }
+      }
+
+      body {
+        margin: 0;
+        font-family: var(--font);
+        font-size: 1.0625rem;
+        line-height: 1.5;
+        color: var(--ink);
+        background: var(--paper);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      :focus-visible {
+        outline: 3px solid var(--signal);
+        outline-offset: 0;
+        box-shadow: 0 0 0 6px var(--ink);
+      }
+      main:focus-visible {
+        outline: none;
+        box-shadow: none;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+
+      .skip {
+        position: absolute;
+        left: 1rem;
+        top: -5rem;
+        z-index: 10;
+        padding: 0.6rem 1rem;
+        background: var(--signal);
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .skip:focus {
+        top: 1rem;
+      }
+
+      /* ---------- Header ---------- */
+      /* Shares the hero's 7/5 split so the navy panel reads as full height */
+      .topbar {
+        display: grid;
+        grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+        min-height: var(--bar);
+      }
+      .topbar::after {
+        content: '';
+        background: var(--ink);
+      }
+      .topbar nav {
+        padding: clamp(1.25rem, 2.5vw, 2rem) var(--gutter) 0;
+      }
+
+      .topbar ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 0.5rem 1.5rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .topbar a {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .topbar a:hover {
+        text-decoration: underline;
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.3em;
+      }
+
+      /* ---------- Hero ---------- */
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+        grid-template-rows: 1fr auto;
+        min-height: calc(100vh - var(--bar));
+        min-height: calc(100svh - var(--bar));
+      }
+
+      .pitch {
+        container-type: inline-size;
+        display: flex;
+        flex-direction: column;
+        padding: 0 var(--gutter) clamp(1.75rem, 3vw, 2.5rem);
+      }
+
+      .pitch-body {
+        margin-block: auto;
+        padding-block: clamp(1.5rem, 4vh, 3rem);
+      }
+
+      .intro {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+      }
+
+      /* Swap this block for <img class="portrait" src="long-tran.jpg" alt="" width="72" height="72"> */
+      .portrait {
+        flex: none;
+        display: grid;
+        place-items: center;
+        width: 4.5rem;
+        height: 4.5rem;
+        border-radius: 50%;
+        border: 3px solid var(--signal);
+        background: var(--ink);
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: 800;
+        object-fit: cover;
+      }
+
+      .role {
+        margin: 0;
+        font-size: 1.1875rem;
+        font-weight: 800;
+      }
+      .now {
+        margin: 0.1rem 0 0;
+        font-size: 0.9375rem;
+        color: var(--mute);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(3.5rem, 10vw, 9rem); /* fallback */
+        font-size: clamp(
+          3.5rem,
+          19cqi,
+          9rem
+        ); /* scales with the column, not the viewport */
+        font-weight: 800;
+        line-height: 0.9;
+        letter-spacing: -0.045em;
+        color: var(--cobalt);
+      }
+
+      .value {
+        margin: 1.5rem 0 0;
+        max-width: 34ch;
+        font-size: clamp(1.3125rem, 2vw, 1.75rem);
+        font-weight: 600;
+        line-height: 1.25;
+        letter-spacing: -0.01em;
+        text-wrap: balance;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1.75rem;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 0.85rem 1.4rem;
+        border: 2px solid var(--ink);
+        border-radius: 6px;
+        font-weight: 600;
+        text-decoration: none;
+        transition:
+          background-color 0.15s,
+          color 0.15s,
+          border-color 0.15s;
+      }
+      .btn-primary {
+        background: var(--ink);
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: var(--cobalt);
+        border-color: var(--cobalt);
+      }
+      .btn-quiet:hover {
+        background: var(--ink);
+        color: #fff;
+      }
+
+      .kbd-hint {
+        margin: 1rem 0 0;
+        font-size: 0.9375rem;
+        color: var(--mute);
+      }
+      kbd {
+        padding: 0.05em 0.45em;
+        font: inherit;
+        font-weight: 600;
+        color: var(--ink);
+        background: #fff;
+        border: 1px solid var(--line);
+        border-bottom-width: 3px;
+        border-radius: 5px;
+      }
+
+      .facts {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1.25rem 1.5rem;
+        margin: 0;
+        padding-top: 1.5rem;
+        border-top: 2px solid var(--ink);
+      }
+      .facts div {
+        display: flex;
+        flex-direction: column-reverse;
+        justify-content: flex-end;
+      }
+      .facts dd {
+        margin: 0;
+        font-size: clamp(1.75rem, 3vw, 2.5rem);
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: -0.03em;
+      }
+      .facts dt {
+        margin-top: 0.4rem;
+        font-size: 0.875rem;
+        line-height: 1.35;
+        color: var(--mute);
+      }
+
+      /* ---------- Hero: the proof ---------- */
+      .proof {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: clamp(2rem, 4vw, 3.5rem) clamp(1.25rem, 3.5vw, 3.5rem);
+        background: var(--ink);
+        color: #fff;
+      }
+
+      .proof h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -0.015em;
+      }
+
+      .proof-context {
+        margin: 0.5rem 0 0;
+        max-width: 44ch;
+        color: var(--panel-mute);
+      }
+
+      .ledger {
+        margin: 2rem 0 0;
+        padding: 0;
+        list-style: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+      }
+
+      .ledger li {
+        display: grid;
+        grid-template-columns: 2rem minmax(0, 1fr);
+        column-gap: 1rem;
+        padding: 1.25rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.16);
+      }
+
+      .tick {
+        grid-row: 1 / span 2;
+        width: 2rem;
+        height: 2rem;
+        fill: none;
+        stroke: var(--signal);
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .tick circle {
+        stroke: rgba(255, 203, 46, 0.35);
+      }
+      .tick path {
+        /* gap longer than the path + offset past its start: no stray round-cap dot before drawing */
+        stroke-dasharray: 1 2;
+        stroke-dashoffset: 1.1;
+        animation: draw 0.45s ease-out forwards;
+        animation-delay: calc(0.4s + var(--i) * 0.22s);
+      }
+      @keyframes draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      .claim {
+        margin: 0;
+        font-size: clamp(1.25rem, 1.9vw, 1.625rem);
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.015em;
+      }
+      .detail {
+        grid-column: 2;
+        margin: 0.3rem 0 0;
+        font-size: 0.9375rem;
+        color: var(--panel-mute);
+      }
+
+      /* ---------- Hero: stack strip ---------- */
+      .stack-strip {
+        grid-column: 1 / -1;
+        padding: 1.5rem var(--gutter);
+        background: #fff;
+        border-top: 1px solid var(--line);
+      }
+      .stack {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1.25rem 2rem;
+        margin: 0;
+      }
+      .stack dt {
+        font-size: 0.9375rem;
+        font-weight: 800;
+      }
+      .stack dd {
+        margin: 0.2rem 0 0;
+        font-size: 0.9375rem;
+        color: var(--mute);
+      }
+
+      /* ---------- Work ---------- */
+      .work {
+        padding: clamp(3.5rem, 8vw, 7rem) var(--gutter) clamp(3rem, 6vw, 5rem);
+      }
+
+      .work-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.5rem 2rem;
+        margin-bottom: clamp(2rem, 4vw, 3rem);
+      }
+      .work-head h2 {
+        margin: 0;
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: -0.035em;
+      }
+      .work-head p {
+        margin: 0;
+        color: var(--mute);
+      }
+
+      .case,
+      .more li {
+        display: grid;
+        grid-template-columns: 11rem minmax(0, 1fr) 13rem;
+        column-gap: clamp(1.5rem, 4vw, 4rem);
+      }
+
+      .case {
+        row-gap: 1rem;
+        padding: clamp(1.75rem, 3vw, 2.5rem) 0;
+        border-top: 2px solid var(--ink);
+      }
+
+      .case-meta {
+        margin: 0;
+        font-size: 0.9375rem;
+        color: var(--mute);
+      }
+      .case-meta strong {
+        display: block;
+        font-weight: 800;
+        color: var(--ink);
+      }
+      .case-meta a {
+        display: inline-block;
+        margin-top: 0.4rem;
+        color: var(--cobalt);
+        font-weight: 600;
+      }
+
+      .case h3 {
+        margin: 0;
+        font-size: clamp(1.75rem, 3vw, 2.5rem);
+        font-weight: 800;
+        line-height: 1.05;
+        letter-spacing: -0.025em;
+      }
+      .case-desc {
+        margin: 0.5rem 0 0;
+        max-width: 60ch;
+        color: var(--mute);
+      }
+      .case-part {
+        margin: 1.25rem 0 0;
+        font-size: 1.1875rem;
+        font-weight: 800;
+        color: var(--cobalt);
+      }
+      .case ul {
+        margin: 0.5rem 0 0;
+        padding-left: 1.1rem;
+        max-width: 62ch;
+      }
+      .case li {
+        margin-top: 0.35rem;
+      }
+      .case li::marker {
+        color: var(--cobalt);
+      }
+      .case-stack {
+        margin: 0.35rem 0 0;
+        font-size: 0.9375rem;
+        color: var(--mute);
+      }
+
+      .more {
+        padding-top: clamp(1.75rem, 3vw, 2.5rem);
+        border-top: 2px solid var(--ink);
+      }
+      .more h3 {
+        margin: 0 0 1rem;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -0.015em;
+      }
+      .more ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .more li {
+        row-gap: 0.25rem;
+        padding: 0.9rem 0;
+        border-top: 1px solid var(--line);
+        font-size: 0.9375rem;
+      }
+      .more strong {
+        display: block;
+        font-size: 1.0625rem;
+        font-weight: 800;
+      }
+      .more span {
+        color: var(--mute);
+      }
+
+      .work-close {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem 2rem;
+        margin-top: clamp(2.5rem, 5vw, 4rem);
+        padding-top: 1.5rem;
+        border-top: 2px solid var(--ink);
+      }
+      .work-close p {
+        margin: 0;
+        font-size: 1.375rem;
+        font-weight: 800;
+        letter-spacing: -0.015em;
+      }
+      .work-close .actions {
+        margin-top: 0;
+      }
+
+      /* ---------- Responsive ---------- */
+      @media (max-width: 1100px) {
+        .case,
+        .more li {
+          grid-template-columns: 11rem minmax(0, 1fr);
+        }
+        .case-stack,
+        .more li > :last-child {
+          grid-column: 2;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .topbar,
+        .hero {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .topbar::after {
+          display: none;
+        }
+        .stack {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 700px) {
+        .case,
+        .more li {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .case-stack,
+        .more li > :last-child {
+          grid-column: auto;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .topbar ul {
+          justify-content: flex-start;
+        }
+        .facts {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .stack {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .btn {
+          width: 100%;
+          text-align: center;
+        }
+        .work-close .actions {
+          width: 100%;
+        }
+      }
+
+      /* Short laptop screens: keep the hero above the fold */
+      @media (min-width: 901px) and (max-height: 820px) {
+        .pitch-body {
+          padding-block: 1.25rem;
+        }
+        .value {
+          margin-top: 1rem;
+        }
+        .actions {
+          margin-top: 1.25rem;
+        }
+        .kbd-hint {
+          display: none;
+        }
+        .ledger {
+          margin-top: 1.25rem;
+        }
+        .ledger li {
+          padding: 0.9rem 0;
+        }
+      }
+
+      /* No keyboard, no Tab hint */
+      @media (hover: none) {
+        .kbd-hint {
+          display: none;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .tick path {
+          animation: none;
+          stroke-dashoffset: 0;
+        }
+        .btn {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to main content</a>
+
+    <header class="topbar">
+      <nav aria-label="Main">
+        <ul role="list">
+          <li><a href="#work">Work</a></li>
+          <li>
+            <a href="https://www.linkedin.com/in/longtran98/">LinkedIn</a>
+          </li>
+          <li><a href="https://github.com/longtm101898">GitHub</a></li>
+          <li><a href="Long-Tran-CV.pdf" download>Download CV</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main" tabindex="-1">
+      <!-- ==================== Hero ==================== -->
+      <div class="hero">
+        <div class="pitch">
+          <div class="pitch-body">
+            <div class="intro">
+              <div class="portrait" aria-hidden="true">LT</div>
+              <div>
+                <p class="role">Full-stack engineer</p>
+                <p class="now">
+                  Building IWorkForNSW for the NSW Government at AdNeo
+                </p>
+              </div>
+            </div>
+
+            <h1>Long Tran</h1>
+
+            <p class="value">
+              One engineer who covers React, React Native and .NET, and also
+              fixes what the security and accessibility audits find.
+            </p>
+
+            <div class="actions">
+              <a class="btn btn-primary" href="#work">View my work</a>
+              <a class="btn btn-quiet" href="mailto:tranminhlong0000@gmail.com"
+                >Email me</a
+              >
+            </div>
+            <p class="kbd-hint">
+              This page works by keyboard. Press <kbd>Tab</kbd> to try it.
+            </p>
+          </div>
+
+          <dl class="facts">
+            <div>
+              <dt>years shipping web and mobile</dt>
+              <dd>6+</dd>
+            </div>
+            <div>
+              <dt>products across 6 companies</dt>
+              <dd>10</dd>
+            </div>
+            <div>
+              <dt>companies where I built from scratch</dt>
+              <dd>3</dd>
+            </div>
+            <div>
+              <dt>GPA, First Class Honours</dt>
+              <dd>4/4</dd>
+            </div>
+          </dl>
+        </div>
+
+        <section class="proof" aria-labelledby="proof-title">
+          <h2 id="proof-title">What I delivered on IWorkForNSW</h2>
+          <p class="proof-context">
+            The official recruitment platform of the New South Wales Government.
+            September 2025 to present.
+          </p>
+
+          <ul class="ledger" role="list">
+            <li style="--i: 0">
+              <svg class="tick" viewBox="0 0 32 32" aria-hidden="true">
+                <circle cx="16" cy="16" r="14" />
+                <path pathLength="1" d="M9.5 16.5l4.5 4.5 9-10" />
+              </svg>
+              <p class="claim">WCAG 2.1 AA compliance</p>
+              <p class="detail">
+                Achieved, with improved keyboard navigation and screen-reader
+                support.
+              </p>
+            </li>
+            <li style="--i: 1">
+              <svg class="tick" viewBox="0 0 32 32" aria-hidden="true">
+                <circle cx="16" cy="16" r="14" />
+                <path pathLength="1" d="M9.5 16.5l4.5 4.5 9-10" />
+              </svg>
+              <p class="claim">2,500 records in under 10 minutes</p>
+              <p class="detail">
+                NSW Health feeds after optimisation, measured in UAT.
+              </p>
+            </li>
+            <li style="--i: 2">
+              <svg class="tick" viewBox="0 0 32 32" aria-hidden="true">
+                <circle cx="16" cy="16" r="14" />
+                <path pathLength="1" d="M9.5 16.5l4.5 4.5 9-10" />
+              </svg>
+              <p class="claim">Pen-test and Mend SCA findings remediated</p>
+              <p class="detail">
+                Authentication and session handling hardened along the way.
+              </p>
+            </li>
+            <li style="--i: 3">
+              <svg class="tick" viewBox="0 0 32 32" aria-hidden="true">
+                <circle cx="16" cy="16" r="14" />
+                <path pathLength="1" d="M9.5 16.5l4.5 4.5 9-10" />
+              </svg>
+              <p class="claim">3 ATS integrations validated</p>
+              <p class="detail">PageUp, SAP SuccessFactors and Taleo.</p>
+            </li>
+          </ul>
+        </section>
+
+        <section class="stack-strip" aria-labelledby="stack-title">
+          <h2 id="stack-title" class="sr-only">Tech stack</h2>
+          <dl class="stack">
+            <div>
+              <dt>Frontend</dt>
+              <dd>React, Next.js, TypeScript, Redux</dd>
+            </div>
+            <div>
+              <dt>Mobile</dt>
+              <dd>React Native, Expo, Capacitor, Ionic</dd>
+            </div>
+            <div>
+              <dt>Backend</dt>
+              <dd>C#/.NET, Blazor, Node.js, SQL Server, PostgreSQL</dd>
+            </div>
+            <div>
+              <dt>Cloud and quality</dt>
+              <dd>
+                Azure Functions, App Service, Azure DevOps CI/CD, Mend SCA
+              </dd>
+            </div>
+          </dl>
+        </section>
+      </div>
+
+      <!-- ==================== Work ==================== -->
+      <section id="work" class="work" aria-labelledby="work-title">
+        <div class="work-head">
+          <h2 id="work-title">Work</h2>
+          <p>Ten products since 2020. Five in detail, five in brief.</p>
+        </div>
+
+        <article class="case">
+          <p class="case-meta">
+            <strong>Sep 2025 to present</strong>
+            AdNeo<br />Full-stack engineer<br />
+            <a href="https://iworkfor.nsw.gov.au/">iworkfor.nsw.gov.au</a>
+          </p>
+          <div>
+            <h3>IWorkForNSW</h3>
+            <p class="case-desc">
+              The official recruitment platform of the New South Wales
+              Government.
+            </p>
+            <p class="case-part">
+              Full-stack delivery, plus the security and accessibility work.
+            </p>
+            <ul>
+              <li>
+                Delivered React and Next.js recruitment features, enhanced the
+                .NET APIs and Blazor CMS, and maintained mobile features in
+                React Native.
+              </li>
+              <li>
+                Reached WCAG 2.1 AA and remediated findings from penetration
+                testing and Mend SCA.
+              </li>
+              <li>
+                Tuned NSW Health feeds to 2,500 records in under 10 minutes in
+                UAT, and validated PageUp, SAP SuccessFactors and Taleo
+                integrations.
+              </li>
+              <li>
+                Optimised SSR performance and caching, and stabilised regression
+                testing in Azure DevOps.
+              </li>
+            </ul>
+          </div>
+          <p class="case-stack">
+            <span class="sr-only">Stack: </span>React, Next.js, TypeScript,
+            C#/.NET, Blazor, SQL Server and Azure SQL, Azure Functions, Azure
+            DevOps, Mend SCA
+          </p>
+        </article>
+
+        <article class="case">
+          <!-- Curieous -->
+          <p class="case-meta">
+            <strong>Feb 2023 to Oct 2025</strong>
+            Curieous<br />Frontend and mobile developer<br />
+            <a
+              href="https://apps.apple.com/us/app/curieous-tell-founder-stories/id6445838553"
+              >App Store</a
+            >
+          </p>
+          <div>
+            <h3>Curieous</h3>
+            <p class="case-desc">
+              A voice-to-content platform that turns voice into LinkedIn posts,
+              on web and mobile.
+            </p>
+            <p class="case-part">Built the product from scratch.</p>
+            <ul>
+              <li>
+                Developed the web and mobile apps from zero, with frontend
+                architecture as my main focus.
+              </li>
+              <li>
+                Handled configuration, development, deployment and ongoing
+                maintenance.
+              </li>
+              <li>Kept the two platforms consistent and fast.</li>
+            </ul>
+          </div>
+          <p class="case-stack">
+            <span class="sr-only">Stack: </span>React Native, React, Next.js
+          </p>
+        </article>
+
+        <article class="case">
+          <p class="case-meta">
+            <strong>2021 to 2024</strong>
+            Bocasay Vietnam<br />Frontend and mobile developer<br />
+            <a href="https://lawcation.fr">lawcation.fr</a>
+          </p>
+          <div>
+            <h3>Lawcation</h3>
+            <p class="case-desc">
+              A mobile app that connects lawyers who need support from one
+              another on their cases.
+            </p>
+            <p class="case-part">Designed the system architecture.</p>
+            <ul>
+              <li>Designed the overall architecture of the system.</li>
+              <li>Developed both frontend and backend features.</li>
+              <li>Managed and maintained the database.</li>
+            </ul>
+          </div>
+          <p class="case-stack">
+            <span class="sr-only">Stack: </span>Node.js, React Native, Socket,
+            PostgreSQL
+          </p>
+        </article>
+
+        <article class="case">
+          <p class="case-meta">
+            <strong>2021 to 2024</strong>
+            Bocasay Vietnam<br />Frontend and mobile developer<br />
+            <a href="https://sicom.mu">sicom.mu</a>
+          </p>
+          <div>
+            <h3>SICOM App</h3>
+            <p class="case-desc">
+              A consulting engagement to fix and optimise the client's
+              applications.
+            </p>
+            <p class="case-part">Upgraded and stabilised a live app.</p>
+            <ul>
+              <li>
+                Upgraded the mobile app versions and optimised loading
+                performance.
+              </li>
+              <li>
+                Reorganised the project structure for scalability and
+                maintainability.
+              </li>
+              <li>Debugged and fixed issues in live production.</li>
+              <li>Ejected from Expo to allow advanced customisation.</li>
+            </ul>
+          </div>
+          <p class="case-stack">
+            <span class="sr-only">Stack: </span>React Native, React, Express,
+            PostgreSQL
+          </p>
+        </article>
+
+        <article class="case">
+          <p class="case-meta">
+            <strong>2021 to 2024</strong>
+            Bocasay Vietnam<br />Frontend and mobile developer<br />
+            <a href="https://onceit.co.nz">onceit.co.nz</a>
+          </p>
+          <div>
+            <h3>OnceIT</h3>
+            <p class="case-desc">
+              An online clothing platform where vendors can sell or rent out
+              their products.
+            </p>
+            <p class="case-part">Frontend consultant on a live store.</p>
+            <ul>
+              <li>
+                Developed and maintained the live e-commerce frontend in React.
+              </li>
+              <li>
+                Worked directly with the client to clarify requirements and
+                coordinate with backend teams.
+              </li>
+              <li>
+                Proposed best practices and technical solutions as the frontend
+                consultant.
+              </li>
+            </ul>
+          </div>
+          <p class="case-stack">
+            <span class="sr-only">Stack: </span>React, PHP, Symfony
+          </p>
+        </article>
+
+        <div class="more">
+          <h3>Also worked on</h3>
+          <ul role="list">
+            <li>
+              <div><strong>WAAA</strong><span>Creatory</span></div>
+              <div>Built an NFT web application from scratch.</div>
+              <span>Next.js, Web3.js</span>
+            </li>
+            <li>
+              <div><strong>Hyppo</strong><span>Creatory</span></div>
+              <div>
+                Maintained and extended existing applications with new features
+                and bug fixes.
+              </div>
+            </li>
+            <li>
+              <div><strong>Olympe</strong><span>Bocasay Vietnam</span></div>
+              <div>
+                Developed reusable low-code components and enhanced platform
+                functionality.
+              </div>
+              <span>React, Node.js</span>
+            </li>
+            <li>
+              <div>
+                <strong>Vietcetera</strong><span>Vietcetera Media</span>
+              </div>
+              <div>
+                Refactored the company website, improved performance and SEO,
+                and built mobile apps from scratch.
+              </div>
+              <span>Next.js, React, React Native</span>
+            </li>
+            <li>
+              <div><strong>GlobeOne</strong><span>Sutrix Solutions</span></div>
+              <div>
+                Delivered frontend features and UI integrations across mobile
+                and web.
+              </div>
+              <span>NativeScript, Vue.js</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="work-close">
+          <p>Want the detail behind any of these?</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="mailto:tranminhlong0000@gmail.com"
+              >Email me</a
+            >
+            <a class="btn btn-quiet" href="Long-Tran-CV.pdf" download
+              >Download CV</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
