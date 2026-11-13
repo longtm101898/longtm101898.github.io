@@ -491,6 +491,54 @@
         color: var(--mute);
       }
 
+      .case-study {
+        grid-column: 2 / -1;
+        margin-top: 2rem;
+      }
+      .study-section {
+        display: grid;
+        grid-template-columns: 10rem minmax(0, 1fr);
+        gap: 0.75rem 2rem;
+        padding-block: 1.5rem;
+        border-top: 1px solid var(--line);
+      }
+      .study-section h4 {
+        margin: 0;
+        font-size: 1.0625rem;
+        line-height: 1.35;
+      }
+      .study-number {
+        display: block;
+        margin-bottom: 0.35rem;
+        color: var(--cobalt);
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+      .study-copy p {
+        max-width: 62ch;
+        margin: 0;
+      }
+      .study-copy p + p {
+        margin-top: 1rem;
+      }
+      .study-results {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1.5rem;
+        margin: 0;
+      }
+      .study-results dt {
+        color: var(--cobalt);
+        font-size: 1.375rem;
+        font-weight: 800;
+        line-height: 1.2;
+      }
+      .study-results dd {
+        margin: 0.5rem 0 0;
+        color: var(--mute);
+        font-size: 0.9375rem;
+      }
+
       .more {
         padding-top: clamp(1.75rem, 3vw, 2.5rem);
         border-top: 2px solid var(--ink);
@@ -543,6 +591,14 @@
 
       /* ---------- Responsive ---------- */
       @media (max-width: 1100px) {
+        .study-section {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 1rem;
+        }
+        .study-number {
+          display: inline;
+          margin-right: 0.5rem;
+        }
         .case,
         .more li {
           grid-template-columns: 11rem minmax(0, 1fr);
@@ -571,6 +627,14 @@
       }
 
       @media (max-width: 700px) {
+        .case-study {
+          grid-column: 1;
+          margin-top: 1.5rem;
+        }
+        .study-results {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 1.25rem;
+        }
         .case,
         .more li {
           grid-template-columns: minmax(0, 1fr);
@@ -745,9 +809,9 @@
                 <circle cx="16" cy="16" r="14" />
                 <path pathLength="1" d="M9.5 16.5l4.5 4.5 9-10" />
               </svg>
-              <p class="claim">2,500 records in under 10 minutes</p>
+              <p class="claim">2,500 records in 9.32 minutes</p>
               <p class="detail">
-                NSW Health feeds after optimisation, measured in UAT.
+                NSW Health feeds after optimisation, validated in UAT.
               </p>
             </li>
             <li style="--i: 2">
@@ -803,7 +867,7 @@
           <p>Ten products since 2020. Five in detail, five in brief.</p>
         </div>
 
-        <article class="case">
+        <article class="case" id="iworkfornsw">
           <h3>IWorkForNSW</h3>
           <p class="case-meta">
             <span class="when">Sep 2025 to present</span>
@@ -817,34 +881,98 @@
               Government.
             </p>
             <p class="case-part">
-              Full-stack delivery, plus the security and accessibility work.
+              Recruitment features, accessibility and secure integrations.
             </p>
-            <ul>
-              <li>
-                Delivered React and Next.js recruitment features, enhanced the
-                .NET APIs and Blazor CMS, and maintained mobile features in
-                React Native.
-              </li>
-              <li>
-                Reached WCAG 2.1 AA and remediated findings from penetration
-                testing and Mend SCA.
-              </li>
-              <li>
-                Tuned NSW Health feeds to 2,500 records in under 10 minutes in
-                UAT, and validated PageUp, SAP SuccessFactors and Taleo
-                integrations.
-              </li>
-              <li>
-                Optimised SSR performance and caching, and stabilised regression
-                testing in Azure DevOps.
-              </li>
-            </ul>
           </div>
           <p class="case-stack">
             <span class="sr-only">Stack: </span>React, Next.js, TypeScript,
             C#/.NET, Blazor, SQL Server and Azure SQL, Azure Functions, Azure
             DevOps, Mend SCA
           </p>
+          <div class="case-study">
+            <section class="study-section" aria-labelledby="nsw-challenge">
+              <h4 id="nsw-challenge">
+                <span class="study-number" aria-hidden="true">01</span>
+                The challenge
+              </h4>
+              <div class="study-copy">
+                <p>
+                  Deliver recruitment features while addressing accessibility
+                  and security audit findings. The work also covered NSW Health
+                  data feeds and integrations with external applicant tracking
+                  systems.
+                </p>
+              </div>
+            </section>
+
+            <section class="study-section" aria-labelledby="nsw-approach">
+              <h4 id="nsw-approach">
+                <span class="study-number" aria-hidden="true">02</span>
+                Technical approach
+              </h4>
+              <div class="study-copy">
+                <p>
+                  <strong>Accessibility and security.</strong> Improved keyboard
+                  navigation and screen-reader support, remediated penetration
+                  testing and Mend SCA findings, and hardened authentication and
+                  session handling.
+                </p>
+                <p>
+                  <strong>Data and integrations.</strong> Optimised NSW Health
+                  feeds that previously took ~34 minutes for 1,740 changed
+                  records; introduced mapping caches, deduplication and
+                  four-worker parallelism, and validated 2,500 records in
+                  9.32 minutes in UAT. Validated
+                  integrations with PageUp, SAP SuccessFactors and Taleo.
+                </p>
+                <p>
+                  <strong>Web performance and releases.</strong> Optimised
+                  server-side rendering and caching, and stabilised regression
+                  testing in Azure DevOps.
+                </p>
+              </div>
+            </section>
+
+            <section class="study-section" aria-labelledby="nsw-contribution">
+              <h4 id="nsw-contribution">
+                <span class="study-number" aria-hidden="true">03</span>
+                My contribution
+              </h4>
+              <div class="study-copy">
+                <p>
+                  As a full-stack engineer at AdNeo, I delivered recruitment
+                  features in React and Next.js, enhanced the .NET APIs and
+                  Blazor CMS, and maintained React Native mobile features.
+                  My scope also included the audit remediation, feed optimisation
+                  and integration validation described above.
+                </p>
+              </div>
+            </section>
+
+            <section class="study-section" aria-labelledby="nsw-outcomes">
+              <h4 id="nsw-outcomes">
+                <span class="study-number" aria-hidden="true">04</span>
+                Outcomes
+              </h4>
+              <dl class="study-results">
+                <div>
+                  <dt>WCAG 2.1 AA</dt>
+                  <dd>
+                    Compliance achieved, with improved keyboard navigation and
+                    screen-reader support.
+                  </dd>
+                </div>
+                <div>
+                  <dt>2,500 records<br>in 9.32 min</dt>
+                  <dd>NSW Health feed processing, validated in UAT.</dd>
+                </div>
+                <div>
+                  <dt>3 ATS integrations</dt>
+                  <dd>PageUp, SAP SuccessFactors and Taleo validated.</dd>
+                </div>
+              </dl>
+            </section>
+          </div>
         </article>
 
         <article class="case">
