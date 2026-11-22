@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <title>Long Tran, full-stack engineer</title>
     <meta
       name="description"
@@ -14,27 +17,129 @@
       property="og:description"
       content="React, React Native and .NET, plus the security and accessibility fixes. WCAG 2.1 AA achieved on the NSW Government recruitment platform."
     />
-    <meta name="theme-color" content="#0C1A3F" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;800&display=swap"
-      rel="stylesheet"
+    <meta property="og:url" content="https://longtm101898.github.io/" />
+    <meta
+      property="og:image"
+      content="https://longtm101898.github.io/og-image.png"
     />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Long Tran, full-stack engineer. React, React Native and .NET, plus the security and accessibility fixes."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#0C1A3F"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#070C1F"
+    />
+    <link rel="canonical" href="https://longtm101898.github.io/" />
+    <link rel="icon" href="favicon.ico" sizes="32x32" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link
+      rel="preload"
+      href="fonts/atkinson-hyperlegible-next-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Long Tran",
+        "jobTitle": "Full-stack engineer",
+        "url": "https://longtm101898.github.io/",
+        "email": "mailto:tranminhlong0000@gmail.com",
+        "worksFor": { "@type": "Organization", "name": "AdNeo" },
+        "sameAs": [
+          "https://www.linkedin.com/in/longtran98/",
+          "https://github.com/longtm101898"
+        ],
+        "knowsAbout": [
+          "React",
+          "Next.js",
+          "React Native",
+          "TypeScript",
+          "C#",
+          ".NET",
+          "Web accessibility"
+        ]
+      }
+    </script>
     <style>
+      @font-face {
+        font-family: 'Atkinson Hyperlegible Next';
+        font-style: normal;
+        font-weight: 400 800;
+        font-display: swap;
+        src: url('fonts/atkinson-hyperlegible-next-latin.woff2') format('woff2');
+        unicode-range:
+          U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+          U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+          U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+
       :root {
+        color-scheme: light dark;
         --paper: #f2f5fa;
         --ink: #0c1a3f;
+        --navy: #0c1a3f;
+        --panel: #0c1a3f;
+        --surface: #fff;
+        --on-ink: #fff;
         --cobalt: #2743d3;
         --signal: #ffcb2e;
         --mute: #4f5b7a;
         --line: #d3dae8;
         --panel-mute: #b9c4e0;
+        --panel-rule: rgba(255, 255, 255, 0.16);
         --gutter: clamp(1.25rem, 5vw, 5rem);
-        --bar: 3.75rem;
+        --gutter-l: max(var(--gutter), env(safe-area-inset-left, 0px));
+        --gutter-r: max(var(--gutter), env(safe-area-inset-right, 0px));
+        --bar: 4rem;
         --font:
           'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', system-ui,
           sans-serif;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --paper: #070c1f;
+          --ink: #eef1fa;
+          --panel: #121f4d;
+          --surface: #0d1530;
+          --on-ink: #070c1f;
+          --cobalt: #8fa3ff;
+          --mute: #a6b1cf;
+          --line: #27314f;
+        }
+      }
+
+      @media (prefers-contrast: more) {
+        :root {
+          --cobalt: #1a2f9e;
+          --mute: #2c3654;
+          --line: #6b7690;
+          --panel-mute: #dfe5f5;
+          --panel-rule: rgba(255, 255, 255, 0.5);
+        }
+      }
+
+      @media (prefers-contrast: more) and (prefers-color-scheme: dark) {
+        :root {
+          --cobalt: #b9c5ff;
+          --mute: #d5dcf0;
+          --line: #8b96b8;
+        }
       }
 
       * {
@@ -65,7 +170,7 @@
       :focus-visible {
         outline: 3px solid var(--signal);
         outline-offset: 0;
-        box-shadow: 0 0 0 6px var(--ink);
+        box-shadow: 0 0 0 6px var(--navy);
       }
       main:focus-visible {
         outline: none;
@@ -88,7 +193,7 @@
         z-index: 10;
         padding: 0.6rem 1rem;
         background: var(--signal);
-        color: var(--ink);
+        color: var(--navy);
         font-weight: 600;
       }
       .skip:focus {
@@ -104,24 +209,27 @@
       }
       .topbar::after {
         content: '';
-        background: var(--ink);
+        background: var(--panel);
       }
       .topbar nav {
-        padding: clamp(0.9rem, 2vw, 1.5rem) var(--gutter) 0;
+        padding: calc(clamp(0.9rem, 2vw, 1.5rem) - 0.3125rem) var(--gutter-r) 0
+          var(--gutter-l);
       }
 
       .topbar ul {
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-end;
-        gap: 0.25rem 1.5rem;
-        margin: 0;
+        gap: 0 0.5rem;
+        margin: 0 -0.5rem;
         padding: 0;
         list-style: none;
       }
       .topbar a {
-        display: inline-block;
-        padding: 0.35rem 0; /* target taller than 24px */
+        display: inline-flex;
+        align-items: center;
+        min-height: 2.75rem; /* 44px target */
+        padding: 0 0.5rem;
         font-size: 0.9375rem;
         font-weight: 600;
         text-decoration: none;
@@ -145,7 +253,7 @@
         container-type: inline-size;
         display: flex;
         flex-direction: column;
-        padding: 0 var(--gutter) clamp(1.75rem, 3vw, 2.5rem);
+        padding: 0 var(--gutter-r) clamp(1.75rem, 3vw, 2.5rem) var(--gutter-l);
       }
 
       .pitch-body {
@@ -170,7 +278,7 @@
         height: 4.5rem;
         border-radius: 50%;
         border: 3px solid var(--signal);
-        background: var(--ink);
+        background: var(--navy);
         color: #fff;
         font-size: 1.5rem;
         font-weight: 800;
@@ -230,7 +338,7 @@
       }
       .btn-primary {
         background: var(--ink);
-        color: #fff;
+        color: var(--on-ink);
       }
       .btn-primary:hover {
         background: var(--cobalt);
@@ -238,7 +346,7 @@
       }
       .btn-quiet:hover {
         background: var(--ink);
-        color: #fff;
+        color: var(--on-ink);
       }
 
       .kbd-hint {
@@ -251,7 +359,7 @@
         font: inherit;
         font-weight: 600;
         color: var(--ink);
-        background: #fff;
+        background: var(--surface);
         border: 1px solid var(--line);
         border-bottom-width: 3px;
         border-radius: 5px;
@@ -289,8 +397,11 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: clamp(2rem, 4vw, 3.5rem) clamp(1.25rem, 3.5vw, 3.5rem);
-        background: var(--ink);
+        --proof-x: clamp(1.25rem, 3.5vw, 3.5rem);
+        padding-block: clamp(2rem, 4vw, 3.5rem);
+        padding-inline: var(--proof-x)
+          max(var(--proof-x), env(safe-area-inset-right, 0px));
+        background: var(--panel);
         color: #fff;
       }
 
@@ -311,7 +422,7 @@
         margin: 2rem 0 0;
         padding: 0;
         list-style: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+        border-bottom: 1px solid var(--panel-rule);
       }
 
       .ledger li {
@@ -319,7 +430,7 @@
         grid-template-columns: 2rem minmax(0, 1fr);
         column-gap: 1rem;
         padding: 1.25rem 0;
-        border-top: 1px solid rgba(255, 255, 255, 0.16);
+        border-top: 1px solid var(--panel-rule);
       }
 
       .tick {
@@ -365,8 +476,8 @@
       /* ---------- Hero: stack strip ---------- */
       .stack-strip {
         grid-column: 1 / -1;
-        padding: 1.5rem var(--gutter);
-        background: #fff;
+        padding: 1.5rem var(--gutter-r) 1.5rem var(--gutter-l);
+        background: var(--surface);
         border-top: 1px solid var(--line);
       }
       .stack {
@@ -387,7 +498,8 @@
 
       /* ---------- Work ---------- */
       .work {
-        padding: clamp(3.5rem, 8vw, 7rem) var(--gutter) clamp(3rem, 6vw, 5rem);
+        padding: clamp(3.5rem, 8vw, 7rem) var(--gutter-r) clamp(3rem, 6vw, 5rem)
+          var(--gutter-l);
       }
 
       .work-head {
@@ -449,9 +561,9 @@
         color: var(--ink);
       }
       .case-meta a {
-        display: inline-block;
-        margin-top: 0.3rem;
-        padding: 0.15rem 0; /* target taller than 24px */
+        display: inline-flex;
+        align-items: center;
+        min-height: 2.75rem; /* 44px target */
         color: var(--cobalt);
         font-weight: 600;
       }
@@ -621,6 +733,9 @@
         .topbar::after {
           display: none;
         }
+        .proof {
+          padding-left: max(var(--proof-x), env(safe-area-inset-left, 0px));
+        }
         .stack {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
@@ -702,6 +817,23 @@
       @media (hover: none) {
         .kbd-hint {
           display: none;
+        }
+      }
+
+      @media (prefers-contrast: more) {
+        .topbar a {
+          text-decoration: underline;
+          text-underline-offset: 0.3em;
+        }
+        .tick circle {
+          stroke: var(--signal);
+        }
+      }
+
+      @media (forced-colors: active) {
+        .tick,
+        .tick circle {
+          stroke: CanvasText;
         }
       }
 
