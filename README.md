@@ -4,7 +4,7 @@ Personal portfolio hosted at [https://longtm101898.github.io/](https://longtm101
 
 ## Files
 
-- `index.html`: the portfolio page, including its styles.
+- `index.html`: the portfolio page, including its styles and the theme toggle script.
 - `Long-Tran-CV.pdf`: the downloadable CV linked from the page.
 - `fonts/`: the self-hosted Atkinson Hyperlegible Next font (latin subset) and its OFL licence.
 - `favicon.svg`, `favicon.ico`, `apple-touch-icon.png`: site icons.

@@ -75,6 +75,13 @@
         ]
       }
     </script>
+    <script>
+      try {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'light' || theme === 'dark')
+          document.documentElement.dataset.theme = theme;
+      } catch {}
+    </script>
     <style>
       @font-face {
         font-family: 'Atkinson Hyperlegible Next';
@@ -112,7 +119,7 @@
       }
 
       @media (prefers-color-scheme: dark) {
-        :root {
+        :root:not([data-theme='light']) {
           --paper: #070c1f;
           --ink: #eef1fa;
           --panel: #121f4d;
@@ -122,6 +129,21 @@
           --mute: #a6b1cf;
           --line: #27314f;
         }
+      }
+
+      :root[data-theme='light'] {
+        color-scheme: light;
+      }
+      :root[data-theme='dark'] {
+        color-scheme: dark;
+        --paper: #070c1f;
+        --ink: #eef1fa;
+        --panel: #121f4d;
+        --surface: #0d1530;
+        --on-ink: #070c1f;
+        --cobalt: #8fa3ff;
+        --mute: #a6b1cf;
+        --line: #27314f;
       }
 
       @media (prefers-contrast: more) {
@@ -135,11 +157,24 @@
       }
 
       @media (prefers-contrast: more) and (prefers-color-scheme: dark) {
-        :root {
+        :root:not([data-theme='light']) {
           --cobalt: #b9c5ff;
           --mute: #d5dcf0;
           --line: #8b96b8;
         }
+      }
+
+      @media (prefers-contrast: more) {
+        :root[data-theme='dark'] {
+          --cobalt: #b9c5ff;
+          --mute: #d5dcf0;
+          --line: #8b96b8;
+        }
+      }
+
+      ::view-transition-old(root),
+      ::view-transition-new(root) {
+        animation-duration: 0.3s;
       }
 
       * {
@@ -211,9 +246,16 @@
         content: '';
         background: var(--panel);
       }
-      .topbar nav {
+      .topbar-main {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
         padding: calc(clamp(0.9rem, 2vw, 1.5rem) - 0.3125rem) var(--gutter-r) 0
           var(--gutter-l);
+      }
+      .topbar nav {
+        flex: 1;
+        min-width: 0;
       }
 
       .topbar ul {
@@ -238,6 +280,46 @@
         text-decoration: underline;
         text-decoration-thickness: 2px;
         text-underline-offset: 0.3em;
+      }
+
+      .theme-toggle {
+        flex: none;
+        display: grid;
+        place-items: center;
+        width: 2.75rem;
+        height: 2.75rem;
+        margin-right: -0.75rem;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: none;
+        color: inherit;
+        cursor: pointer;
+        transition:
+          background-color 0.15s,
+          color 0.15s;
+      }
+      .theme-toggle[hidden] {
+        display: none;
+      }
+      .theme-toggle svg {
+        width: 1.25rem;
+        height: 1.25rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .theme-toggle[aria-pressed='true'] .moon,
+      .theme-toggle[aria-pressed='false'] .sun {
+        display: none;
+      }
+      @media (hover: hover) {
+        .theme-toggle:hover {
+          background: var(--ink);
+          color: var(--on-ink);
+        }
       }
 
       /* ---------- Hero ---------- */
@@ -842,7 +924,8 @@
           animation: none;
           stroke-dashoffset: 0;
         }
-        .btn {
+        .btn,
+        .theme-toggle {
           transition: none;
         }
       }
@@ -852,16 +935,35 @@
     <a class="skip" href="#main">Skip to main content</a>
 
     <header class="topbar">
-      <nav aria-label="Main">
-        <ul role="list">
-          <li><a href="#work">Work</a></li>
-          <li>
-            <a href="https://www.linkedin.com/in/longtran98/">LinkedIn</a>
-          </li>
-          <li><a href="https://github.com/longtm101898">GitHub</a></li>
-          <li><a href="Long-Tran-CV.pdf" download>Download CV (PDF)</a></li>
-        </ul>
-      </nav>
+      <div class="topbar-main">
+        <nav aria-label="Main">
+          <ul role="list">
+            <li><a href="#work">Work</a></li>
+            <li>
+              <a href="https://www.linkedin.com/in/longtran98/">LinkedIn</a>
+            </li>
+            <li><a href="https://github.com/longtm101898">GitHub</a></li>
+            <li><a href="Long-Tran-CV.pdf" download>Download CV (PDF)</a></li>
+          </ul>
+        </nav>
+        <button
+          class="theme-toggle"
+          type="button"
+          aria-label="Dark mode"
+          aria-pressed="false"
+          hidden
+        >
+          <svg class="moon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+          </svg>
+          <svg class="sun" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" />
+            <path
+              d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+            />
+          </svg>
+        </button>
+      </div>
     </header>
 
     <main id="main" tabindex="-1">
@@ -1298,5 +1400,47 @@
         </div>
       </section>
     </main>
+
+    <script>
+      (() => {
+        const root = document.documentElement;
+        const button = document.querySelector('.theme-toggle');
+        const metas = document.querySelectorAll('meta[name="theme-color"]');
+        const tints = ['#0C1A3F', '#070C1F'];
+        const systemDark = matchMedia('(prefers-color-scheme: dark)');
+        const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+        const isDark = () =>
+          root.dataset.theme ? root.dataset.theme === 'dark' : systemDark.matches;
+
+        const sync = () => {
+          button.setAttribute('aria-pressed', isDark());
+          metas.forEach((meta, i) => {
+            meta.content = tints[root.dataset.theme ? +isDark() : i];
+          });
+        };
+
+        const toggle = () => {
+          const dark = !isDark();
+          const override = dark === systemDark.matches ? '' : dark ? 'dark' : 'light';
+          if (override) root.dataset.theme = override;
+          else delete root.dataset.theme;
+          try {
+            if (override) localStorage.setItem('theme', override);
+            else localStorage.removeItem('theme');
+          } catch {}
+          sync();
+        };
+
+        button.addEventListener('click', () => {
+          if (document.startViewTransition && !reducedMotion.matches)
+            document.startViewTransition(toggle);
+          else toggle();
+        });
+        systemDark.addEventListener('change', sync);
+        button.hidden = false;
+        sync();
+      })();
+    </script>
   </body>
 </html>
