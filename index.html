@@ -783,6 +783,28 @@
         margin-top: 0;
       }
 
+      /* ---------- Colophon ---------- */
+      .colophon {
+        padding: clamp(2rem, 4vw, 3rem) var(--gutter-r) clamp(3rem, 6vw, 5rem)
+          var(--gutter-l);
+        border-top: 1px solid var(--line);
+      }
+      .colophon h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -0.015em;
+      }
+      .colophon-copy {
+        margin: 0.75rem 0 1.5rem;
+        max-width: 62ch;
+        color: var(--mute);
+      }
+      .colophon-copy a {
+        color: var(--cobalt);
+        font-weight: 600;
+      }
+
       /* ---------- Responsive ---------- */
       @media (max-width: 1100px) {
         .study-section {
@@ -1400,6 +1422,35 @@
         </div>
       </section>
     </main>
+
+    <footer class="colophon">
+      <h2>This site</h2>
+      <p class="colophon-copy">
+        Hand-coded HTML and CSS in one file. No framework, no build step, no
+        dependencies — works without JavaScript. The code is the demo:
+        <a href="https://github.com/longtm101898/longtm101898.github.io"
+          >view source on GitHub</a
+        >.
+      </p>
+      <dl class="facts">
+        <div>
+          <dt>Lighthouse, every category</dt>
+          <dd>4 × 100</dd>
+        </div>
+        <div>
+          <dt>transferred on first visit</dt>
+          <dd>~44 KB</dd>
+        </div>
+        <div>
+          <dt>Largest Contentful Paint</dt>
+          <dd>&lt;1 s</dd>
+        </div>
+        <div>
+          <dt>runtime dependencies</dt>
+          <dd>0</dd>
+        </div>
+      </dl>
+    </footer>
 
     <script>
       (() => {
