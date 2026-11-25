@@ -339,6 +339,7 @@
       }
 
       .pitch-body {
+        position: relative;
         margin-block: auto;
         padding-block: clamp(1.5rem, 4vh, 3rem);
       }
@@ -350,8 +351,6 @@
         margin-bottom: 1.25rem;
       }
 
-      /* Swap this block for
-     <img class="portrait" src="long-tran.jpg" alt="Portrait of Long Tran" width="72" height="72"> */
       .portrait {
         flex: none;
         display: grid;
@@ -361,10 +360,10 @@
         border-radius: 50%;
         border: 3px solid var(--signal);
         background: var(--navy);
-        color: #fff;
-        font-size: 1.5rem;
-        font-weight: 800;
-        object-fit: cover;
+      }
+      .portrait svg {
+        width: 100%;
+        height: 100%;
       }
 
       .role {
@@ -387,6 +386,115 @@
         line-height: 0.9;
         letter-spacing: -0.045em;
         color: var(--cobalt);
+      }
+
+      .hero-name-stage {
+        position: relative;
+        width: fit-content;
+        max-width: 100%;
+      }
+      .hero-name-fx,
+      .hero-spell {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        user-select: none;
+      }
+      .hero-name-fx span,
+      .hero-spell span {
+        position: absolute;
+        border-radius: 99px;
+      }
+      .hero-name-fx span {
+        height: 3px;
+        background: var(--cobalt);
+        opacity: 0;
+        transition: transform 180ms ease-out, opacity 150ms ease-out;
+      }
+      .hero-intro-skip {
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-end: 0;
+        min-block-size: 2.75rem;
+        padding: 0.25rem 0.75rem;
+        border: 1px solid var(--cobalt);
+        border-radius: 6px;
+        background: var(--surface);
+        color: var(--cobalt);
+        font: inherit;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .hero-intro-skip:is(:hover, :focus-visible) {
+        text-decoration: underline;
+      }
+      .hero-spell {
+        --spell-time: 2.05s;
+      }
+      .spell-trail {
+        inset-inline: 0;
+        inset-block-end: -0.9rem;
+        height: 4px;
+        background: linear-gradient(90deg, var(--cobalt) 0%, var(--cobalt) 55%, var(--signal) 100%);
+        transform-origin: left;
+      }
+      .spell-spark {
+        inset-block-end: -0.9rem;
+        inset-inline-end: 1%;
+        width: 0.55rem;
+        height: 0.55rem;
+        background: var(--signal);
+      }
+      .spell-spark + .spell-spark {
+        inset-inline-end: 6%;
+        width: 0.35rem;
+        height: 0.35rem;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .intro-running .robot-pen {
+          transform-box: view-box;
+          transform-origin: 49px 51px;
+          animation: pen-wave 1.4s ease-in-out both;
+        }
+        .intro-running .hero-spell {
+          animation: spell-life var(--spell-time) linear both;
+        }
+        .intro-running .spell-trail {
+          animation: spell-trail var(--spell-time) ease-out both;
+        }
+        .intro-running .spell-spark {
+          animation: spell-spark var(--spell-time) ease-out both;
+        }
+      }
+      @keyframes pen-wave {
+        0%, 90%, 100% { transform: rotate(0); }
+        32% { transform: rotate(-38deg); }
+        72% { transform: rotate(-14deg); }
+      }
+      @keyframes spell-life {
+        0%, 65% { opacity: 1; }
+        to { opacity: 0; }
+      }
+      @keyframes spell-trail {
+        0%, 24% { transform: scaleX(0); }
+        63%, 100% { transform: scaleX(1); }
+      }
+      @keyframes spell-spark {
+        0%, 58% { opacity: 0; transform: rotate(45deg) scale(0.35); }
+        67% { opacity: 1; }
+        to { opacity: 0; transform: translate(0.2rem, -0.7rem) rotate(80deg) scale(0.2); }
+      }
+      @media (max-width: 560px) {
+        .hero-spell { --spell-time: 1.5s; }
+        .spell-trail { inset-inline-end: 45%; }
+        .spell-spark { display: none; }
+      }
+      @media (prefers-reduced-motion: reduce), (forced-colors: active), (prefers-contrast: more) {
+        .hero-name-fx,
+        .hero-spell {
+          display: none;
+        }
       }
 
       .value {
@@ -785,6 +893,7 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 1.5rem;
         margin: 0;
+        overflow-wrap: anywhere;
       }
       .study-results dt {
         color: var(--cobalt);
@@ -982,6 +1091,12 @@
         }
       }
 
+      @media (min-width: 360px) and (min-height: 540px) {
+        .pitch-body {
+          padding-block-start: max(3.375rem, 4vh);
+        }
+      }
+
       /* No keyboard, no Tab hint */
       @media (hover: none) {
         .kbd-hint {
@@ -1054,8 +1169,25 @@
       <div class="hero">
         <div class="pitch">
           <div class="pitch-body">
+            <button class="hero-intro-skip" type="button" hidden>Skip intro</button>
             <div class="intro">
-              <div class="portrait" aria-hidden="true">LT</div>
+              <div class="portrait" aria-hidden="true">
+                <svg viewBox="0 0 66 66" width="66" height="66" focusable="false">
+                  <path d="M30 18v-6l5-3" fill="none" stroke="#8fa3ff" stroke-width="2.5" stroke-linecap="round" />
+                  <circle cx="36" cy="8" r="2.5" fill="#ffcb2e" />
+                  <path d="M8 31h5m33 0h5" stroke="#8fa3ff" stroke-width="5" stroke-linecap="round" />
+                  <rect x="12" y="18" width="35" height="26" rx="8" fill="#eef1fa" />
+                  <rect x="16" y="23" width="27" height="15" rx="5" fill="#0c1a3f" />
+                  <path d="M23 30v2m14-2v2" stroke="#ffcb2e" stroke-width="3" stroke-linecap="round" />
+                  <rect x="19" y="46" width="23" height="13" rx="4" fill="#8fa3ff" />
+                  <path d="M25 50v5h4m2-5h6m-3 0v5" fill="none" stroke="#0c1a3f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                  <g class="robot-pen">
+                    <path d="m40 49 9 2 10-23" fill="none" stroke="#8fa3ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="m48 51 9-22 4-3-1 5-9 21z" fill="#ffcb2e" />
+                    <path d="M59 16v6m-3-3h6" stroke="#ffcb2e" stroke-width="1.5" stroke-linecap="round" />
+                  </g>
+                </svg>
+              </div>
               <div>
                 <p class="role">Full-stack engineer</p>
                 <p class="now">
@@ -1064,7 +1196,15 @@
               </div>
             </div>
 
-            <h1>Long Tran</h1>
+            <div class="hero-name-stage">
+              <h1 id="hero-name" tabindex="-1">Long Tran</h1>
+              <span class="hero-name-fx" aria-hidden="true" hidden><span></span><span></span></span>
+              <span class="hero-spell" aria-hidden="true" hidden>
+                <span class="spell-trail"></span>
+                <span class="spell-spark"></span>
+                <span class="spell-spark"></span>
+              </span>
+            </div>
 
             <p class="value">
               One engineer who covers React, React Native and .NET, and also
@@ -1598,6 +1738,126 @@
         };
         motion.addEventListener('change', stop, { once: true });
         colors.addEventListener('change', stop, { once: true });
+      })();
+    </script>
+    <script>
+      (() => {
+        const fine = matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+        const contrast = matchMedia('(forced-colors: active), (prefers-contrast: more)');
+        const heading = document.querySelector('#hero-name');
+        const layer = document.querySelector('.hero-name-fx');
+        const marks = [...layer.children];
+        let frame, point, words;
+
+        const reset = () => {
+          if (!frame && !words) return;
+          cancelAnimationFrame(frame);
+          frame = 0;
+          words = null;
+          marks.forEach((mark) => {
+            mark.style.opacity = '';
+            mark.style.transform = '';
+          });
+        };
+        const update = () => {
+          frame = 0;
+          if (document.hidden || !getSelection().isCollapsed) return reset();
+          if (!words) {
+            const text = heading.firstChild;
+            const bounds = heading.getBoundingClientRect();
+            const range = document.createRange();
+            words = Array.from(text.data.matchAll(/\S+/g), (word) => {
+              range.setStart(text, word.index);
+              range.setEnd(text, word.index + word[0].length);
+              return range.getBoundingClientRect();
+            });
+            words.forEach((word, i) => {
+              const top = Math.min(word.bottom - bounds.top, bounds.height + 11) + 3;
+              marks[i].style.cssText =
+                `left:${word.left - bounds.left}px;top:${top}px;width:${word.width}px`;
+            });
+            layer.hidden = false;
+          }
+          words.forEach((word, i) => {
+            const x = (point.x - word.left) / word.width;
+            const near = x >= 0 && x <= 1 && point.y >= word.top && point.y <= word.bottom;
+            marks[i].style.transform = near ? `translateX(${8 * x - 4}px)` : '';
+            marks[i].style.opacity = near ? '.7' : '';
+          });
+        };
+        heading.addEventListener('pointermove', (event) => {
+          if (event.pointerType === 'touch' || !fine.matches || contrast.matches ||
+              heading.closest('.intro-running')) return;
+          point = event;
+          if (!frame) frame = requestAnimationFrame(update);
+        }, { passive: true });
+        heading.addEventListener('pointerleave', reset);
+        for (const event of ['resize', 'scroll', 'pagehide']) addEventListener(event, reset, { passive: true });
+        for (const event of ['selectionchange', 'visibilitychange']) document.addEventListener(event, reset);
+        document.fonts?.addEventListener('loadingdone', reset);
+        fine.addEventListener('change', reset);
+        contrast.addEventListener('change', reset);
+      })();
+    </script>
+    <script>
+      (() => {
+        const motion = matchMedia('(prefers-reduced-motion: no-preference) and (min-width: 360px) and (min-height: 540px)');
+        const contrast = matchMedia('(forced-colors: active), (prefers-contrast: more)');
+        if (!motion.matches || contrast.matches || location.hash || document.hidden) return;
+
+        const heading = document.querySelector('#hero-name');
+        const area = heading.closest('.pitch-body');
+        const skip = area.querySelector('.hero-intro-skip');
+        const spell = area.querySelector('.hero-spell');
+        const opening = new AbortController();
+        const cancelStart = () => opening.abort();
+        for (const type of ['pointerdown', 'keydown', 'scroll', 'pagehide', 'visibilitychange']) {
+          addEventListener(type, cancelStart, { passive: true, signal: opening.signal });
+        }
+        const inView = () => {
+          const { top, bottom } = area.getBoundingClientRect();
+          return top >= 0 && top + skip.offsetHeight <= innerHeight &&
+            bottom > 0 && heading.getBoundingClientRect().bottom < innerHeight;
+        };
+
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          if (opening.signal.aborted) return;
+          cancelStart();
+          if (performance.now() > 800 || !motion.matches || contrast.matches ||
+              document.hidden || location.hash || scrollY || !inView()) return;
+          try {
+            const key = 'portfolio-intro-v1';
+            if (sessionStorage.getItem(key)) return;
+            sessionStorage.setItem(key, '1');
+          } catch { return; }
+
+          const intro = new AbortController();
+          const options = { signal: intro.signal };
+          const finish = () => {
+            clearTimeout(deadline);
+            intro.abort();
+            area.classList.remove('intro-running');
+            if (document.activeElement === skip) heading.focus({ preventScroll: true });
+            skip.hidden = spell.hidden = true;
+          };
+          const deadline = setTimeout(finish, 2400);
+          area.classList.add('intro-running');
+          skip.hidden = spell.hidden = false;
+          spell.addEventListener('animationend', (event) => {
+            if (event.target === spell) finish();
+          }, options);
+          skip.addEventListener('click', finish, options);
+          addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !event.defaultPrevented) finish();
+          }, options);
+          const checkView = () => { if (!inView()) finish(); };
+          addEventListener('scroll', checkView, { ...options, passive: true });
+          addEventListener('resize', checkView, options);
+          addEventListener('pagehide', finish, options);
+          document.addEventListener('visibilitychange', finish, options);
+          motion.addEventListener('change', finish, options);
+          contrast.addEventListener('change', finish, options);
+        }));
       })();
     </script>
   </body>
