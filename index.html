@@ -378,7 +378,8 @@
       }
 
       /* max is 2.5x min so the name can still reach 200% when zoomed */
-      h1 {
+      h1,
+      .hero-name-fx {
         margin: 0;
         font-size: clamp(3.5rem, 10vw, 8.75rem); /* fallback */
         font-size: clamp(3.5rem, 19cqi, 8.75rem); /* scales with the column */
@@ -400,16 +401,43 @@
         pointer-events: none;
         user-select: none;
       }
-      .hero-name-fx span,
       .hero-spell span {
         position: absolute;
         border-radius: 99px;
       }
-      .hero-name-fx span {
-        height: 3px;
-        background: var(--cobalt);
-        opacity: 0;
-        transition: transform 180ms ease-out, opacity 150ms ease-out;
+      .hero-name-fx {
+        inset-inline: -1.25rem;
+        overflow-x: clip;
+      }
+      .hero-glyph {
+        position: absolute;
+        transform-origin: center;
+      }
+      .robot-pen {
+        transform-box: view-box;
+        transform-origin: 49px 51px;
+      }
+      .robot-lids {
+        transform-box: fill-box;
+        transform-origin: center;
+      }
+      @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+        .name-moving {
+          color: transparent;
+        }
+        .robot-waving:not(.intro-running) .robot-pen {
+          animation: pen-wave 760ms ease-in-out both;
+        }
+        .robot-looking .robot-pupils {
+          transition: transform 110ms ease-out;
+        }
+        .robot-blinking .robot-lids {
+          animation: robot-blink 230ms ease-in-out 1;
+        }
+      }
+      @keyframes robot-blink {
+        0%, 100% { transform: scaleY(1); }
+        52% { transform: scaleY(0.12); }
       }
       .hero-intro-skip {
         position: absolute;
@@ -453,8 +481,6 @@
       }
       @media (prefers-reduced-motion: no-preference) {
         .intro-running .robot-pen {
-          transform-box: view-box;
-          transform-origin: 49px 51px;
           animation: pen-wave 1.4s ease-in-out both;
         }
         .intro-running .hero-spell {
@@ -491,6 +517,9 @@
         .spell-spark { display: none; }
       }
       @media (prefers-reduced-motion: reduce), (forced-colors: active), (prefers-contrast: more) {
+        .name-moving {
+          color: var(--cobalt);
+        }
         .hero-name-fx,
         .hero-spell {
           display: none;
@@ -1178,7 +1207,10 @@
                   <path d="M8 31h5m33 0h5" stroke="#8fa3ff" stroke-width="5" stroke-linecap="round" />
                   <rect x="12" y="18" width="35" height="26" rx="8" fill="#eef1fa" />
                   <rect x="16" y="23" width="27" height="15" rx="5" fill="#0c1a3f" />
-                  <path d="M23 30v2m14-2v2" stroke="#ffcb2e" stroke-width="3" stroke-linecap="round" />
+                  <g class="robot-lids">
+                    <path d="M20.5 31a3.5 4 0 1 0 7 0 3.5 4 0 1 0-7 0m12 0a3.5 4 0 1 0 7 0 3.5 4 0 1 0-7 0" fill="#6279c4" />
+                    <path class="robot-pupils" d="M24 30v2m12-2v2" stroke="#ffcb2e" stroke-width="3" stroke-linecap="round" />
+                  </g>
                   <rect x="19" y="46" width="23" height="13" rx="4" fill="#8fa3ff" />
                   <path d="M25 50v5h4m2-5h6m-3 0v5" fill="none" stroke="#0c1a3f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
                   <g class="robot-pen">
@@ -1198,7 +1230,7 @@
 
             <div class="hero-name-stage">
               <h1 id="hero-name" tabindex="-1">Long Tran</h1>
-              <span class="hero-name-fx" aria-hidden="true" hidden><span></span><span></span></span>
+              <span class="hero-name-fx" aria-hidden="true" hidden></span>
               <span class="hero-spell" aria-hidden="true" hidden>
                 <span class="spell-trail"></span>
                 <span class="spell-spark"></span>
@@ -1744,56 +1776,127 @@
       (() => {
         const fine = matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
         const contrast = matchMedia('(forced-colors: active), (prefers-contrast: more)');
+        const hero = document.querySelector('.hero');
         const heading = document.querySelector('#hero-name');
-        const layer = document.querySelector('.hero-name-fx');
-        const marks = [...layer.children];
-        let frame, point, words;
+        const layer = hero.querySelector('.hero-name-fx');
+        const area = heading.closest('.pitch-body');
+        const portrait = area.querySelector('.portrait');
+        const pupils = portrait.querySelector('.robot-pupils');
+        const available = () => fine.matches && !contrast.matches && !document.hidden &&
+          !area.classList.contains('intro-running');
+        let frame = 0, previous = 0, letters, radius, eye, pointer, namePointer;
 
+        const restoreName = () => {
+          if (!letters) return;
+          heading.classList.remove('name-moving');
+          layer.hidden = true;
+          letters = namePointer = null;
+        };
         const reset = () => {
-          if (!frame && !words) return;
           cancelAnimationFrame(frame);
-          frame = 0;
-          words = null;
-          marks.forEach((mark) => {
-            mark.style.opacity = '';
-            mark.style.transform = '';
-          });
+          frame = previous = 0;
+          eye = pointer = null;
+          restoreName();
+          pupils.style.transform = '';
+          area.classList.remove('robot-waving', 'robot-blinking', 'robot-looking');
         };
-        const update = () => {
+        const prepareName = () => {
+          const text = heading.firstChild;
+          const bounds = heading.getBoundingClientRect();
+          const range = document.createRange();
+          const glyphs = Array.from(text.data.matchAll(/\S/gu), (match) => {
+            range.setStart(text, match.index);
+            range.setEnd(text, match.index + match[0].length);
+            return { text: match[0], rect: range.getBoundingClientRect() };
+          });
+          radius = Math.min(130, Math.max(65, bounds.height * 1.1));
+          const firstTop = glyphs[0].rect.top;
+          letters = glyphs.map(({ text, rect }) => {
+            const el = document.createElement('span');
+            el.className = 'hero-glyph';
+            el.textContent = text;
+            el.style.left = `calc(1.25rem + ${rect.left - bounds.left}px)`;
+            el.style.top = `${rect.top - firstTop}px`;
+            return {
+              el, x: (rect.left + rect.right) / 2, y: (rect.top + rect.bottom) / 2,
+              position: [0, 0, 0], velocity: [0, 0, 0],
+            };
+          });
+          layer.replaceChildren(...letters.map((letter) => letter.el));
+          layer.hidden = false;
+          heading.classList.add('name-moving');
+        };
+        const update = (now) => {
           frame = 0;
-          if (document.hidden || !getSelection().isCollapsed) return reset();
-          if (!words) {
-            const text = heading.firstChild;
-            const bounds = heading.getBoundingClientRect();
-            const range = document.createRange();
-            words = Array.from(text.data.matchAll(/\S+/g), (word) => {
-              range.setStart(text, word.index);
-              range.setEnd(text, word.index + word[0].length);
-              return range.getBoundingClientRect();
-            });
-            words.forEach((word, i) => {
-              const top = Math.min(word.bottom - bounds.top, bounds.height + 11) + 3;
-              marks[i].style.cssText =
-                `left:${word.left - bounds.left}px;top:${top}px;width:${word.width}px`;
-            });
-            layer.hidden = false;
+          if (!available()) return reset();
+          const dt = previous ? Math.min((now - previous) / 1000, .032) : 1 / 60;
+          const damping = Math.exp(-17 * dt);
+          let moving = false;
+          for (const { el, x, y, position, velocity } of letters || []) {
+            const dx = namePointer ? x - namePointer.x : 0;
+            const dy = namePointer ? y - namePointer.y : 0;
+            const distance = Math.hypot(dx, dy);
+            const strength = namePointer ? 32 * Math.max(0, 1 - distance / radius) ** 1.5 : 0;
+            const pushX = distance < 1 ? strength : strength * dx / distance;
+            const pushY = strength * .64 * dy / Math.max(1, distance);
+            const target = [pushX, pushY, pushX * .42 - pushY * .22];
+            for (let axis = 0; axis < 3; axis++) {
+              const gap = target[axis] - position[axis];
+              velocity[axis] = (velocity[axis] + 285 * gap * dt) * damping;
+              position[axis] += velocity[axis] * dt;
+              if (Math.abs(gap) > .1 || Math.abs(velocity[axis]) > .5) moving = true;
+            }
+            el.style.transform = `translate3d(${position[0]}px, ${position[1]}px, 0) rotate(${position[2]}deg)`;
           }
-          words.forEach((word, i) => {
-            const x = (point.x - word.left) / word.width;
-            const near = x >= 0 && x <= 1 && point.y >= word.top && point.y <= word.bottom;
-            marks[i].style.transform = near ? `translateX(${8 * x - 4}px)` : '';
-            marks[i].style.opacity = near ? '.7' : '';
-          });
+          if (pointer && eye) {
+            const x = pointer.x - eye.x, y = pointer.y - eye.y;
+            const length = Math.max(45, Math.hypot(x, y));
+            pupils.style.transform = `translate(${2.6 * x / length}px, ${2.2 * y / length}px)`;
+          } else {
+            pupils.style.transform = '';
+          }
+          previous = moving ? now : 0;
+          if (moving) frame = requestAnimationFrame(update);
+          else if (!namePointer) restoreName();
         };
-        heading.addEventListener('pointermove', (event) => {
-          if (event.pointerType === 'touch' || !fine.matches || contrast.matches ||
-              heading.closest('.intro-running')) return;
-          point = event;
-          if (!frame) frame = requestAnimationFrame(update);
+        const queue = () => { if (!frame) frame = requestAnimationFrame(update); };
+        hero.addEventListener('pointermove', (event) => {
+          if (event.pointerType === 'touch' || !available()) return;
+          if (!eye) {
+            const bounds = portrait.getBoundingClientRect();
+            eye = { x: bounds.left + bounds.width * .46, y: bounds.top + bounds.height * .47 };
+          }
+          pointer = { x: event.clientX, y: event.clientY };
+          if (event.buttons || !heading.contains(event.target) || !getSelection()?.isCollapsed) {
+            namePointer = null;
+          } else {
+            if (!letters) prepareName();
+            if (!namePointer) area.classList.add('robot-waving', 'robot-blinking');
+            namePointer = pointer;
+          }
+          area.classList.add('robot-looking');
+          queue();
         }, { passive: true });
-        heading.addEventListener('pointerleave', reset);
+        hero.addEventListener('pointerleave', () => {
+          namePointer = pointer = eye = null;
+          if (letters || area.classList.contains('robot-looking')) queue();
+        });
+        hero.addEventListener('pointerdown', restoreName, { passive: true });
+        hero.addEventListener('pointercancel', reset);
+        portrait.addEventListener('pointerenter', (event) => {
+          if (event.pointerType !== 'touch' && available()) area.classList.add('robot-blinking');
+        });
+        portrait.addEventListener('animationend', (event) => {
+          if (event.animationName === 'robot-blink') area.classList.remove('robot-blinking');
+          else if (!area.classList.contains('intro-running') && event.animationName === 'pen-wave') {
+            area.classList.remove('robot-waving');
+          }
+        });
         for (const event of ['resize', 'scroll', 'pagehide']) addEventListener(event, reset, { passive: true });
-        for (const event of ['selectionchange', 'visibilitychange']) document.addEventListener(event, reset);
+        document.addEventListener('selectionchange', () => {
+          if (!getSelection()?.isCollapsed) restoreName();
+        });
+        document.addEventListener('visibilitychange', reset);
         document.fonts?.addEventListener('loadingdone', reset);
         fine.addEventListener('change', reset);
         contrast.addEventListener('change', reset);
