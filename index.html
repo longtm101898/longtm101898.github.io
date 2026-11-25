@@ -405,10 +405,6 @@
         position: absolute;
         border-radius: 99px;
       }
-      .hero-name-fx {
-        inset-inline: -1.25rem;
-        overflow-x: clip;
-      }
       .hero-glyph {
         position: absolute;
         transform-origin: center;
@@ -1792,7 +1788,7 @@
         const pupils = portrait.querySelector('.robot-pupils');
         const available = () => fine.matches && !contrast.matches && !document.hidden &&
           !area.classList.contains('intro-running');
-        let frame = 0, previous = 0, letters, radius, eye, pointer, namePointer;
+        let frame = 0, previous = 0, letters, radius, viewportWidth, eye, pointer, namePointer;
 
         const restoreName = () => {
           if (!letters) return;
@@ -1811,6 +1807,7 @@
         const prepareName = () => {
           const text = heading.firstChild;
           const bounds = heading.getBoundingClientRect();
+          viewportWidth = document.documentElement.clientWidth;
           const range = document.createRange();
           const glyphs = Array.from(text.data.matchAll(/\S/gu), (match) => {
             range.setStart(text, match.index);
@@ -1819,19 +1816,25 @@
           });
           radius = Math.min(130, Math.max(65, bounds.height * 1.1));
           const firstTop = glyphs[0].rect.top;
-          letters = glyphs.map(({ text, rect }) => {
+          const elements = glyphs.map(({ text, rect }) => {
             const el = document.createElement('span');
             el.className = 'hero-glyph';
             el.textContent = text;
-            el.style.left = `calc(1.25rem + ${rect.left - bounds.left}px)`;
+            el.style.left = `${rect.left - bounds.left}px`;
             el.style.top = `${rect.top - firstTop}px`;
+            return el;
+          });
+          layer.replaceChildren(...elements);
+          layer.hidden = false;
+          letters = elements.map((el, i) => {
+            const { rect } = glyphs[i];
+            const box = el.getBoundingClientRect();
             return {
               el, x: (rect.left + rect.right) / 2, y: (rect.top + rect.bottom) / 2,
+              center: box.left + box.width / 2, halfWidth: box.width / 2, halfHeight: box.height / 2,
               position: [0, 0, 0], velocity: [0, 0, 0],
             };
           });
-          layer.replaceChildren(...letters.map((letter) => letter.el));
-          layer.hidden = false;
           heading.classList.add('name-moving');
         };
         const update = (now) => {
@@ -1840,7 +1843,7 @@
           const dt = previous ? Math.min((now - previous) / 1000, .032) : 1 / 60;
           const damping = Math.exp(-17 * dt);
           let moving = false;
-          for (const { el, x, y, position, velocity } of letters || []) {
+          for (const { el, x, y, center, halfWidth, halfHeight, position, velocity } of letters || []) {
             const dx = namePointer ? x - namePointer.x : 0;
             const dy = namePointer ? y - namePointer.y : 0;
             const distance = Math.hypot(dx, dy);
@@ -1854,7 +1857,10 @@
               position[axis] += velocity[axis] * dt;
               if (Math.abs(gap) > .1 || Math.abs(velocity[axis]) > .5) moving = true;
             }
-            el.style.transform = `translate3d(${position[0]}px, ${position[1]}px, 0) rotate(${position[2]}deg)`;
+            const angle = position[2] * Math.PI / 180;
+            const extent = halfWidth * Math.abs(Math.cos(angle)) + halfHeight * Math.abs(Math.sin(angle));
+            const offset = Math.max(extent + 4 - center, Math.min(viewportWidth - 4 - extent - center, position[0]));
+            el.style.transform = `translate3d(${offset}px, ${position[1]}px, 0) rotate(${position[2]}deg)`;
           }
           if (pointer && eye) {
             const x = pointer.x - eye.x, y = pointer.y - eye.y;
