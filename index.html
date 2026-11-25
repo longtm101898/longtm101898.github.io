@@ -430,6 +430,28 @@
         background: var(--ink);
         color: var(--on-ink);
       }
+      .hero .btn-with-arrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+      .cta-arrow {
+        flex: none;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .cta-arrow {
+          transition: transform 140ms ease-out;
+        }
+        .btn-with-arrow:focus-visible .cta-arrow {
+          transform: translateX(3px);
+        }
+      }
+      @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+        .btn-with-arrow:hover .cta-arrow {
+          transform: translateX(3px);
+        }
+      }
 
       .kbd-hint {
         margin: 1rem 0 0;
@@ -528,12 +550,19 @@
       .tick circle {
         stroke: rgba(255, 203, 46, 0.35);
       }
-      .tick path {
-        /* gap longer than the path + offset past its start: no stray round-cap dot before drawing */
-        stroke-dasharray: 1 2;
-        stroke-dashoffset: 1.1;
-        animation: draw 0.45s ease-out forwards;
-        animation-delay: calc(0.4s + var(--i) * 0.22s);
+      .tick-overlay {
+        visibility: hidden;
+      }
+      @media (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+        .tick-draw-once .tick-base {
+          stroke-opacity: 0.65;
+        }
+        .tick-draw-once .tick-overlay {
+          visibility: visible;
+          stroke-dasharray: 1 2;
+          stroke-dashoffset: 1.1;
+          animation: draw 420ms ease-out forwards;
+        }
       }
       @keyframes draw {
         to {
@@ -602,6 +631,42 @@
       .work-head p {
         margin: 0;
         color: var(--mute);
+      }
+
+      .work-toc {
+        margin-bottom: clamp(2rem, 4vw, 3rem);
+      }
+      .work-toc p {
+        margin: 0 0 0.5rem;
+        font-weight: 800;
+      }
+      .work-toc ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .work-toc a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-inline-size: 2.75rem;
+        min-block-size: 2.75rem;
+        padding: 0.25rem 0.75rem;
+        border: 1px solid var(--cobalt);
+        border-radius: 6px;
+        background: var(--surface);
+        color: var(--cobalt);
+        font-weight: 600;
+        text-underline-offset: 0.2em;
+      }
+      .work-toc a:is(:hover, :focus-visible) {
+        text-decoration-thickness: 2px;
+      }
+      .case h3[id] {
+        scroll-margin-block-start: 1rem;
       }
 
       .case,
@@ -942,10 +1007,6 @@
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .tick path {
-          animation: none;
-          stroke-dashoffset: 0;
-        }
         .btn,
         .theme-toggle {
           transition: none;
@@ -1011,7 +1072,15 @@
             </p>
 
             <div class="actions">
-              <a class="btn btn-primary" href="#work">View my work</a>
+              <a class="btn btn-primary btn-with-arrow" href="#work">
+                View my work
+                <svg class="cta-arrow" width="16" height="16" viewBox="0 0 16 16"
+                  fill="none" stroke="currentColor" stroke-width="1.5"
+                  stroke-linecap="round" stroke-linejoin="round"
+                  aria-hidden="true" focusable="false">
+                  <path d="M2.5 8h10.75M9.25 4l4 4-4 4" />
+                </svg>
+              </a>
               <a class="btn btn-quiet" href="mailto:tranminhlong0000@gmail.com"
                 >Email me</a
               >
@@ -1049,10 +1118,11 @@
           </p>
 
           <ul class="ledger" role="list">
-            <li style="--i: 0">
+            <li>
               <svg class="tick" viewBox="0 0 32 32" aria-hidden="true">
                 <circle cx="16" cy="16" r="14" />
-                <path pathLength="1" d="M9.5 16.5l4.5 4.5 9-10" />
+                <path class="tick-base" d="M9.5 16.5l4.5 4.5 9-10" />
+                <path class="tick-overlay" pathLength="1" d="M9.5 16.5l4.5 4.5 9-10" />
               </svg>
               <p class="claim">WCAG 2.1 AA compliance</p>
               <p class="detail">
@@ -1060,30 +1130,33 @@
                 support.
               </p>
             </li>
-            <li style="--i: 1">
+            <li>
               <svg class="tick" viewBox="0 0 32 32" aria-hidden="true">
                 <circle cx="16" cy="16" r="14" />
-                <path pathLength="1" d="M9.5 16.5l4.5 4.5 9-10" />
+                <path class="tick-base" d="M9.5 16.5l4.5 4.5 9-10" />
+                <path class="tick-overlay" pathLength="1" d="M9.5 16.5l4.5 4.5 9-10" />
               </svg>
               <p class="claim">2,500 records in 9.32 minutes</p>
               <p class="detail">
                 NSW Health feeds after optimisation, validated in UAT.
               </p>
             </li>
-            <li style="--i: 2">
+            <li>
               <svg class="tick" viewBox="0 0 32 32" aria-hidden="true">
                 <circle cx="16" cy="16" r="14" />
-                <path pathLength="1" d="M9.5 16.5l4.5 4.5 9-10" />
+                <path class="tick-base" d="M9.5 16.5l4.5 4.5 9-10" />
+                <path class="tick-overlay" pathLength="1" d="M9.5 16.5l4.5 4.5 9-10" />
               </svg>
               <p class="claim">Pen-test and Mend SCA findings remediated</p>
               <p class="detail">
                 Authentication and session handling hardened along the way.
               </p>
             </li>
-            <li style="--i: 3">
+            <li>
               <svg class="tick" viewBox="0 0 32 32" aria-hidden="true">
                 <circle cx="16" cy="16" r="14" />
-                <path pathLength="1" d="M9.5 16.5l4.5 4.5 9-10" />
+                <path class="tick-base" d="M9.5 16.5l4.5 4.5 9-10" />
+                <path class="tick-overlay" pathLength="1" d="M9.5 16.5l4.5 4.5 9-10" />
               </svg>
               <p class="claim">3 ATS integrations validated</p>
               <p class="detail">PageUp, SAP SuccessFactors and Taleo.</p>
@@ -1123,8 +1196,19 @@
           <p>Ten products since 2020. Five in detail, five in brief.</p>
         </div>
 
+        <nav class="work-toc" aria-labelledby="work-toc-title">
+          <p id="work-toc-title">Jump to a project</p>
+          <ul role="list">
+            <li><a href="#case-iworkfornsw">IWorkForNSW</a></li>
+            <li><a href="#case-curieous">Curieous</a></li>
+            <li><a href="#case-lawcation">Lawcation</a></li>
+            <li><a href="#case-sicom-app">SICOM App</a></li>
+            <li><a href="#case-onceit">OnceIT</a></li>
+          </ul>
+        </nav>
+
         <article class="case" id="iworkfornsw">
-          <h3>IWorkForNSW</h3>
+          <h3 id="case-iworkfornsw" tabindex="-1">IWorkForNSW</h3>
           <p class="case-meta">
             <span class="when">Sep 2025 to present</span>
             <span>AdNeo</span>
@@ -1232,7 +1316,7 @@
         </article>
 
         <article class="case">
-          <h3>Curieous</h3>
+          <h3 id="case-curieous" tabindex="-1">Curieous</h3>
           <p class="case-meta">
             <span class="when">Feb 2023 to Oct 2025</span>
             <span>Curieous</span>
@@ -1269,7 +1353,7 @@
         </article>
 
         <article class="case">
-          <h3>Lawcation</h3>
+          <h3 id="case-lawcation" tabindex="-1">Lawcation</h3>
           <p class="case-meta">
             <span class="when">2021 to 2024</span>
             <span>Bocasay Vietnam</span>
@@ -1295,7 +1379,7 @@
         </article>
 
         <article class="case">
-          <h3>SICOM App</h3>
+          <h3 id="case-sicom-app" tabindex="-1">SICOM App</h3>
           <p class="case-meta">
             <span class="when">2021 to 2024</span>
             <span>Bocasay Vietnam</span>
@@ -1328,7 +1412,7 @@
         </article>
 
         <article class="case">
-          <h3>OnceIT</h3>
+          <h3 id="case-onceit" tabindex="-1">OnceIT</h3>
           <p class="case-meta">
             <span class="when">2021 to 2024</span>
             <span>Bocasay Vietnam</span>
@@ -1491,6 +1575,29 @@
         systemDark.addEventListener('change', sync);
         button.hidden = false;
         sync();
+      })();
+
+      (() => {
+        const motion = matchMedia('(prefers-reduced-motion: no-preference)');
+        const colors = matchMedia('(forced-colors: none)');
+        if (!motion.matches || !colors.matches || !('IntersectionObserver' in window)) return;
+
+        const rows = document.querySelectorAll('.proof .ledger > li');
+        const observer = new IntersectionObserver((entries) => {
+          for (const { target, intersectionRatio } of entries) {
+            if (intersectionRatio < 0.15 || !motion.matches || !colors.matches) continue;
+            target.classList.add('tick-draw-once');
+            observer.unobserve(target);
+          }
+        }, { threshold: 0.15 });
+        rows.forEach((row) => observer.observe(row));
+
+        const stop = () => {
+          observer.disconnect();
+          rows.forEach((row) => row.classList.remove('tick-draw-once'));
+        };
+        motion.addEventListener('change', stop, { once: true });
+        colors.addEventListener('change', stop, { once: true });
       })();
     </script>
   </body>
