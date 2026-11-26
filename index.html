@@ -1259,8 +1259,36 @@
           opacity: 0;
         }
       }
+      /* Says what the hovered link will do, in terminal words. It is a
+         second element because the caret's blend mode would make text
+         over other text hard to read. */
+      .caret-tag {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 20;
+        pointer-events: none;
+        padding: 0 0.375rem;
+        font:
+          600 0.75rem/1.125rem ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          Consolas,
+          monospace;
+        white-space: nowrap;
+        color: var(--on-ink);
+        background: var(--ink);
+        outline: 1px solid var(--paper);
+        opacity: 0;
+        transition: opacity 0.15s;
+        will-change: transform;
+      }
+      .caret-tag.on {
+        opacity: 1;
+      }
       @media print {
-        .caret {
+        .caret,
+        .caret-tag {
           display: none;
         }
       }
@@ -1288,10 +1316,9 @@
             <li><a href="https://github.com/longtm101898">GitHub</a></li>
             <li>
               <a href="Long-Tran-CV.pdf" download
-                ><span class="nav-extra">Download </span>CV<span
+                ><span class="nav-extra">Download&nbsp;</span>CV<span
                   class="nav-extra"
-                >
-                  (PDF)</span
+                  >&nbsp;(PDF)</span
                 ></a
               >
             </li>
@@ -2205,6 +2232,34 @@
         caret.className = 'caret';
         caret.setAttribute('aria-hidden', 'true');
         caret.append(document.createElement('i'));
+        const tag = document.createElement('div');
+        tag.className = 'caret-tag';
+        tag.setAttribute('aria-hidden', 'true');
+        let tagWidth = 0, tagX = 0;
+        const describe = (el) => {
+          if (!el) return '';
+          if (el.matches('.theme-toggle')) return 'theme';
+          if (el.matches('button')) return 'run';
+          if (!el.matches('a[href]')) return '';
+          if (el.hasAttribute('download')) return 'download';
+          if (el.protocol === 'mailto:') return 'email';
+          if (el.origin !== location.origin) return 'open \u2197';
+          const target = el.hash && document.getElementById(el.hash.slice(1));
+          if (!target) return 'open';
+          return target.getBoundingClientRect().top < 0 ? 'jump \u2191' : 'jump \u2193';
+        };
+        const label = (text) => {
+          if (text === tag.textContent) return;
+          tag.textContent = text;
+          tag.classList.toggle('on', !!text);
+          if (!text) return;
+          tagWidth = tag.offsetWidth;
+          // Typed out one character at a time
+          tag.animate(
+            { clipPath: ['inset(0 100% 0 0)', 'inset(0)'] },
+            { duration: text.length * 30, easing: `steps(${text.length})` }
+          );
+        };
         const active = () => fine.matches && !contrast.matches;
         let x = 0, y = 0, tx = 0, ty = 0, frame = 0, idle = 0;
         const hide = () => {
@@ -2212,6 +2267,7 @@
           clearTimeout(idle);
           frame = 0;
           caret.classList.remove('on', 'idle');
+          label('');
         };
         const update = () => {
           x += (tx - x) * 0.25;
@@ -2219,6 +2275,7 @@
           const settled = Math.abs(tx - x) < 0.1 && Math.abs(ty - y) < 0.1;
           if (settled) { x = tx; y = ty; }
           caret.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+          tag.style.transform = `translate3d(${x + tagX}px, ${y}px, 0)`;
           frame = settled ? 0 : requestAnimationFrame(update);
         };
         document.addEventListener('pointermove', (event) => {
@@ -2226,11 +2283,15 @@
           // Sits below and to the right of the arrow, like a prompt
           tx = event.clientX + 14;
           ty = event.clientY + 10;
-          if (!caret.isConnected) document.body.append(caret);
+          if (!caret.isConnected) document.body.append(caret, tag);
           if (!caret.classList.contains('on')) { x = tx; y = ty; }
           caret.classList.add('on');
           caret.classList.remove('idle');
-          caret.classList.toggle('link', !!event.target.closest?.('a, button, summary, label'));
+          const link = event.target.closest?.('a, button, summary, label');
+          caret.classList.toggle('link', !!link);
+          label(describe(link));
+          // Right of the block caret, or left of the pointer near the edge
+          tagX = tx + 18 + tagWidth > document.documentElement.clientWidth ? -tagWidth - 22 : 18;
           clearTimeout(idle);
           idle = setTimeout(() => caret.classList.add('idle'), 400);
           if (!frame) frame = requestAnimationFrame(update);
