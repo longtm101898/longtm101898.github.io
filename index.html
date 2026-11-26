@@ -1221,6 +1221,50 @@
         }
       }
 
+      /* Terminal caret that trails the real pointer. Decorative only:
+         the system cursor stays, and script adds this element only for
+         mouse users who have not asked for less motion. */
+      .caret {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 20;
+        pointer-events: none;
+        mix-blend-mode: difference;
+        opacity: 0;
+        transition: opacity 0.2s;
+        will-change: transform;
+      }
+      .caret.on {
+        opacity: 1;
+      }
+      .caret i {
+        display: block;
+        width: 0.75rem;
+        height: 1.125rem;
+        background: #fff;
+        transform: scaleY(0.167);
+        transform-origin: 0 100%;
+        transition: transform 0.15s ease-out;
+      }
+      .caret.link i {
+        transform: none;
+      }
+      /* Three blinks after the pointer stops, then it stays solid */
+      .caret.idle i {
+        animation: caret-blink 1s steps(1) 3;
+      }
+      @keyframes caret-blink {
+        50% {
+          opacity: 0;
+        }
+      }
+      @media print {
+        .caret {
+          display: none;
+        }
+      }
+
       @media (prefers-reduced-motion: reduce) {
         .btn,
         .theme-toggle {
@@ -2151,6 +2195,51 @@
           motion.addEventListener('change', finish, options);
           contrast.addEventListener('change', finish, options);
         }));
+      })();
+    </script>
+    <script>
+      (() => {
+        const fine = matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+        const contrast = matchMedia('(forced-colors: active), (prefers-contrast: more)');
+        const caret = document.createElement('div');
+        caret.className = 'caret';
+        caret.setAttribute('aria-hidden', 'true');
+        caret.append(document.createElement('i'));
+        const active = () => fine.matches && !contrast.matches;
+        let x = 0, y = 0, tx = 0, ty = 0, frame = 0, idle = 0;
+        const hide = () => {
+          cancelAnimationFrame(frame);
+          clearTimeout(idle);
+          frame = 0;
+          caret.classList.remove('on', 'idle');
+        };
+        const update = () => {
+          x += (tx - x) * 0.25;
+          y += (ty - y) * 0.25;
+          const settled = Math.abs(tx - x) < 0.1 && Math.abs(ty - y) < 0.1;
+          if (settled) { x = tx; y = ty; }
+          caret.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+          frame = settled ? 0 : requestAnimationFrame(update);
+        };
+        document.addEventListener('pointermove', (event) => {
+          if (event.pointerType !== 'mouse' || !active()) return hide();
+          // Sits below and to the right of the arrow, like a prompt
+          tx = event.clientX + 14;
+          ty = event.clientY + 10;
+          if (!caret.isConnected) document.body.append(caret);
+          if (!caret.classList.contains('on')) { x = tx; y = ty; }
+          caret.classList.add('on');
+          caret.classList.remove('idle');
+          caret.classList.toggle('link', !!event.target.closest?.('a, button, summary, label'));
+          clearTimeout(idle);
+          idle = setTimeout(() => caret.classList.add('idle'), 400);
+          if (!frame) frame = requestAnimationFrame(update);
+        }, { passive: true });
+        document.documentElement.addEventListener('pointerleave', hide);
+        document.addEventListener('visibilitychange', hide);
+        addEventListener('pagehide', hide);
+        fine.addEventListener('change', hide);
+        contrast.addEventListener('change', hide);
       })();
     </script>
   </body>
