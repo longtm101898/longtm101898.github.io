@@ -60,6 +60,10 @@
         "url": "https://longtm101898.github.io/",
         "email": "mailto:tranminhlong0000@gmail.com",
         "worksFor": { "@type": "Organization", "name": "AdNeo" },
+        "alumniOf": {
+          "@type": "CollegeOrUniversity",
+          "name": "FPT Education, in alliance with the University of Greenwich"
+        },
         "sameAs": [
           "https://www.linkedin.com/in/longtran98/",
           "https://github.com/longtm101898"
@@ -71,7 +75,9 @@
           "TypeScript",
           "C#",
           ".NET",
-          "Web accessibility"
+          "Azure",
+          "Web accessibility",
+          "Application security"
         ]
       }
     </script>
@@ -970,6 +976,31 @@
         color: var(--mute);
       }
 
+      .side {
+        margin-top: clamp(2.5rem, 5vw, 4rem);
+      }
+      .side h3 {
+        margin-bottom: 0.25rem;
+        scroll-margin-block-start: 1rem;
+      }
+      .side-intro {
+        margin: 0 0 1rem;
+        color: var(--mute);
+      }
+      .side-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 1.25rem;
+      }
+      .side-links a,
+      .contact-links a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 2.75rem; /* 44px target */
+        color: var(--cobalt);
+        font-weight: 600;
+      }
+
       .work-close {
         display: flex;
         flex-wrap: wrap;
@@ -988,6 +1019,16 @@
       }
       .work-close .actions {
         margin-top: 0;
+      }
+      .work-close:focus-visible {
+        outline: none;
+        box-shadow: none;
+      }
+      .work-close .contact-links {
+        font-size: 1rem;
+        font-weight: 400;
+        letter-spacing: 0;
+        color: var(--mute);
       }
 
       /* ---------- Colophon ---------- */
@@ -1170,6 +1211,7 @@
         <nav aria-label="Main">
           <ul role="list">
             <li><a href="#work">Work</a></li>
+            <li><a href="#contact">Contact</a></li>
             <li>
               <a href="https://www.linkedin.com/in/longtran98/">LinkedIn</a>
             </li>
@@ -1669,8 +1711,81 @@
           </ul>
         </div>
 
-        <div class="work-close">
-          <p>Want the detail behind any of these?</p>
+        <div class="more side">
+          <h3 id="side-projects">Side projects</h3>
+          <p class="side-intro">Built on my own time, live to try.</p>
+          <ul role="list">
+            <li>
+              <div><strong>NZ Truck Tracker</strong><span>Personal</span></div>
+              <div>
+                A live truck-location map for New Zealand, streaming positions
+                to the browser over server-sent events.
+                <span class="side-links">
+                  <a href="https://nz-truck-tracker-demo.netlify.app"
+                    >Live demo<span class="sr-only">
+                      of NZ Truck Tracker</span
+                    ></a
+                  >
+                  <a href="https://github.com/longtm101898/nz-truck-tracker"
+                    >Source<span class="sr-only">
+                      of NZ Truck Tracker on GitHub</span
+                    ></a
+                  >
+                </span>
+              </div>
+              <span
+                ><span class="sr-only">Stack: </span>JavaScript, MapLibre,
+                OSRM, GTFS-Realtime, SSE</span
+              >
+            </li>
+            <li>
+              <div><strong>Travel Gallery</strong><span>Personal</span></div>
+              <div>
+                A personal travel photo gallery with an Apple HIG look, serving
+                images from Google Drive.
+                <span class="side-links">
+                  <a href="https://travel-gallery-mu.vercel.app"
+                    >Live site<span class="sr-only">
+                      of Travel Gallery</span
+                    ></a
+                  >
+                </span>
+              </div>
+              <span
+                ><span class="sr-only">Stack: </span>Next.js, TypeScript,
+                Google Drive API</span
+              >
+            </li>
+            <li>
+              <div><strong>This portfolio</strong><span>Personal</span></div>
+              <div>
+                One hand-coded HTML file with no framework or build step,
+                accessible by keyboard and screen reader.
+                <span class="side-links">
+                  <a href="https://github.com/longtm101898/longtm101898.github.io"
+                    >Source<span class="sr-only">
+                      of this portfolio on GitHub</span
+                    ></a
+                  >
+                </span>
+              </div>
+              <span
+                ><span class="sr-only">Stack: </span>HTML, CSS, vanilla
+                JavaScript</span
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="work-close" id="contact" tabindex="-1">
+          <div>
+            <p>Want the detail behind any of these?</p>
+            <p class="contact-links">
+              Or find me on
+              <a href="https://www.linkedin.com/in/longtran98/">LinkedIn</a>
+              and <a href="https://github.com/longtm101898">GitHub</a>.
+            </p>
+          </div>
           <div class="actions">
             <a class="btn btn-primary" href="mailto:tranminhlong0000@gmail.com"
               >Email me</a
@@ -1686,11 +1801,13 @@
     <footer class="colophon">
       <h2>This site</h2>
       <p class="colophon-copy">
-        Hand-coded HTML and CSS in one file. No framework, no build step, no
-        dependencies — works without JavaScript. The code is the demo:
+        Hand-coded HTML, CSS and a little vanilla JavaScript in one file. No
+        framework, no build step, no dependencies. The content works without
+        JavaScript; the script only adds the theme toggle and motion. The code
+        is the demo:
         <a href="https://github.com/longtm101898/longtm101898.github.io"
           >view source on GitHub</a
-        >.
+        >. Last updated <time datetime="2026-11">November 2026</time>.
       </p>
       <dl class="facts">
         <div>
@@ -1699,7 +1816,7 @@
         </div>
         <div>
           <dt>transferred on first visit</dt>
-          <dd>~44 KB</dd>
+          <dd>~50 KB</dd>
         </div>
         <div>
           <dt>Largest Contentful Paint</dt>
