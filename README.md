@@ -9,6 +9,8 @@ Personal portfolio hosted at [https://longtm101898.github.io/](https://longtm101
 - `fonts/`: the self-hosted Atkinson Hyperlegible Next font (latin subset) and its OFL licence.
 - `favicon.svg`, `favicon.ico`, `apple-touch-icon.png`: site icons.
 - `og-image.png`: the 1200x630 preview image used when the link is shared.
+- `404.html`: the page GitHub Pages shows for any address that does not exist.
+- `robots.txt`, `sitemap.xml`: tell search engines the site can be indexed and list its one page.
 - `.nojekyll`: serves the files directly without Jekyll processing.
 
 ## Local preview
@@ -23,7 +25,7 @@ In repository **Settings → Pages**, the source is **Deploy from a branch**, wi
 To update the site, edit the files, commit, and push to `main`:
 
 ```sh
-git add index.html Long-Tran-CV.pdf fonts favicon.svg favicon.ico apple-touch-icon.png og-image.png
+git add index.html 404.html robots.txt sitemap.xml Long-Tran-CV.pdf fonts favicon.svg favicon.ico apple-touch-icon.png og-image.png
 git commit -m "Update portfolio"
 git push origin main
 ```
